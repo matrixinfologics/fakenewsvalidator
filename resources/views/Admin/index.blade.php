@@ -1,1 +1,8 @@
-<h1 style="text-align: center; margin-top:20%;"> Admin Dashboard</h1>
+@extends('Admin.layout')
+
+@section('title', 'Dashboard')
+@section('page-header', 'Dashboard')
+
+@section('content')
+    <p>This is my body content.</p>
+@endsection
