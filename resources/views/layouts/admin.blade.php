@@ -17,8 +17,8 @@
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
-            @include('Admin.layouts.header')
-            @include('Admin.layouts.sidebar')
+            @include('layouts.admin-partials.header')
+            @include('layouts.admin-partials.sidebar')
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
@@ -32,7 +32,7 @@
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-            @include('Admin.layouts.footer')
+            @include('layouts.admin-partials.footer')
         </div>
     </body>
 </html>

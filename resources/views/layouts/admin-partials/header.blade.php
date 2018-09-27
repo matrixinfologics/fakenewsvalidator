@@ -21,22 +21,17 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <!-- The user image in the navbar-->
-                    <span class="hidden-xs">Alexander Pierce</span>
+                    <span class="hidden-xs">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header">
-                            <p> Alexander Pierce - Web Developer
-                                <small>Member since Nov. 2012</small>
-                            </p>
+                            <p>{{ Auth::user()->name }}</p>
                         </li>
 
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
-                            </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                <a href="{{ route('admin.logout') }}" class="btn btn-default btn-flat">Sign out</a>
                             </div>
                         </li>
                     </ul>

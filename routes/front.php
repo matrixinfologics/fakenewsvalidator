@@ -11,6 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-    return "Frontend";
-});
+Route::get('/', 'HomeController@index');
