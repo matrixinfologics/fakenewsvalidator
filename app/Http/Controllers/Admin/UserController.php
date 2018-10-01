@@ -99,8 +99,11 @@ class UserController extends Controller
         $this->user->password = Hash::make($request->get('password'));
 
         // Assign company to user
-        $company = $this->company->find($request->get('company'));
-        $this->user->company()->associate($company);
+        if($request->filled('company')) {
+            $company = $this->company->find($request->get('company'));
+            $this->user->company()->associate($company);
+        }
+
         $this->user->save();
 
         return redirect(route('users.index'))
@@ -150,7 +153,7 @@ class UserController extends Controller
         }
 
         // Assign company to user
-        if($request->has('company')) {
+        if($request->filled('company')) {
             $company = $this->company->find($request->get('company'));
             $user->company()->associate($company);
         }

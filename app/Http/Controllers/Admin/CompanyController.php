@@ -99,8 +99,10 @@ class CompanyController extends Controller
         $this->company->save();
 
         // Assign admin to company
-        $user = $this->user->find($request->get('admin'));
-        $this->company->users()->save($user);
+        if($request->filled('admin')) {
+            $user = $this->user->find($request->get('admin'));
+            $this->company->users()->save($user);
+        }
 
         return redirect(route('companies.index'))
             ->with('success','Company created successfully!');
@@ -147,9 +149,11 @@ class CompanyController extends Controller
 
         $company->save();
 
-         // Assign admin to company
-        $user = $this->user->find($request->get('admin'));
-        $company->users()->save($user);
+        // Assign admin to company
+        if($request->filled('admin')) {
+            $user = $this->user->find($request->get('admin'));
+            $company->users()->save($user);
+        }
 
         return redirect(route('companies.index'))
             ->with('success','Company updated successfully!');
