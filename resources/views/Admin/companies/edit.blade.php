@@ -32,6 +32,10 @@
                             {{ Form::text('address', null, ['class' => 'form-control', 'placeholder' => 'Address']) }}
                             <span class="help-block">{{ $errors->first('address') }}</span>
                         </div>
+                         <div class="form-group {{ $errors->first('user')?'has-error':'' }}">
+                            {{ Form::select('admin', $users, isset($company->companyAdmin->id) ?: null, ['class' => 'form-control', 'placeholder' => 'Choose company admin']) }}
+                            <span class="help-block">{{ $errors->first('user') }}</span>
+                        </div>
                         <div class="box-footer">
                             {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
                         </div>
