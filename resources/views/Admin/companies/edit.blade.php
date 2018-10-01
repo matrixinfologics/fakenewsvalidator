@@ -9,7 +9,7 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Company Info</h3>
-                    <a href="{{ route('users.index') }}" title="Back" class="btn btn-sm btn-primary pull-right">
+                    <a href="{{ route('companies.index') }}" title="Back" class="btn btn-sm btn-primary pull-right">
                         <i class="glyphicon glyphicon-fast-backward"></i>
                          Back
                     </a>

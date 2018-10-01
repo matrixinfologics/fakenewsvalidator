@@ -45,7 +45,11 @@ class UserController extends Controller
         $grid = new \Datagrid($users, $request->get('f', []));
         $grid
             ->setColumn('id', 'Id')
-            ->setColumn('name', 'Name')
+            ->setColumn('name', 'Name', [
+                    'wrapper'     => function ($value, $row) {
+                        return '<a href="' .route('users.show', $row->id). '">' . $value . '</a>';
+                    }
+            ])
             ->setColumn('email', 'Email', [
                 'wrapper'     => function ($value, $row) {
                     return '<a href="mailto:' . $value . '">' . $value . '</a>';
@@ -104,7 +108,7 @@ class UserController extends Controller
     }
 
     /**
-    * Show the form for edit a user.
+    * Show the user data.
     *
     * @return Response
     */
