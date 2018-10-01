@@ -4,13 +4,17 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Aginev\SearchFilters\Filterable;
+use ReflectionClass;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_COMPANY_ADMIN = 'company_admin';
     const ROLE_USER = 'user';
+    const DEFAULT_ROLE = 'user';
 
 
     /**
@@ -19,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -30,6 +34,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get the company that owns the user.
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
 
     /**
      * To check role of Admin
@@ -82,4 +94,48 @@ class User extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+     /**
+    * return role of user
+    *
+    * @return string
+    */
+    public function getRoleNameAttribute()
+    {
+        return ucwords(strtolower(str_replace('_', ' ', $this->role)));
+    }
+
+    /**
+     * Get Roles types as array
+     *
+     * @return array
+     */
+    public function getRolesAsArray()
+    {
+        $prefix = 'ROLE_';
+        $reflection = new ReflectionClass(self::class);
+        $constants  = $reflection->getConstants();
+
+        $prefixLength = strlen($prefix);
+        $options      = [];
+        foreach ($constants as $name => $value) {
+            if (substr($name, 0, $prefixLength) === $prefix) {
+                $enumOptionName = ucwords(strtolower(str_replace('_', ' ', substr($name, $prefixLength))));
+                $options[$value] = $enumOptionName;
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * Get Users as array
+     *
+     * @param string $role
+     * @return array
+     */
+    public function userListByRole($role){
+        return User::where('role', $role)->get()->pluck('name', 'id');
+    }
+
 }

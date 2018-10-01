@@ -4,9 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ff8bc16d6b48d6266d9ce759029f05f3",
-    "content-hash": "22bc835b34e2a7d8e383b65be7dcf98c",
+    "hash": "19ad7d261c6bde862d625405f470b69a",
+    "content-hash": "35be80f47368a0a51f616e3c405543da",
     "packages": [
+        {
+            "name": "aginev/datagrid",
+            "version": "1.0.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aginev/datagrid.git",
+                "reference": "ef295200662c7ab57b15e5a36f95fa811a52c6dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aginev/datagrid/zipball/ef295200662c7ab57b15e5a36f95fa811a52c6dc",
+                "reference": "ef295200662c7ab57b15e5a36f95fa811a52c6dc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.*",
+                "illuminate/support": "5.*",
+                "illuminate/view": "5.*",
+                "laravelcollective/html": "5.*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aginev\\Datagrid\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Atanas Ginev",
+                    "email": "naskospam@gmail.com"
+                }
+            ],
+            "description": "Datagrid package for Laravel v5",
+            "homepage": "http://aginev.com",
+            "keywords": [
+                "Datagrid Package for Laravel v5",
+                "datagrid"
+            ],
+            "time": "2018-04-30 07:46:39"
+        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",
