@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Settings')
-@section('page-header', 'Setting')
+@section('page-header', 'Settings')
 
 @section('content')
     <div class="row">

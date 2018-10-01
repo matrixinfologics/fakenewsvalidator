@@ -46,7 +46,11 @@ class CompanyController extends Controller
         $grid = new \Datagrid($companies, $request->get('f', []));
         $grid
             ->setColumn('id', 'Id')
-            ->setColumn('name', 'Name')
+            ->setColumn('name', 'Name',[
+                    'wrapper'     => function ($value, $row) {
+                        return '<a href="' .route('companies.show', $row->id). '">' . $value . '</a>';
+                    }
+            ])
             ->setColumn('website', 'Website')
             ->setColumn('phone', 'Phone')
             ->setColumn('companyAdmin', 'Admin', [
@@ -57,9 +61,9 @@ class CompanyController extends Controller
             ->setActionColumn([
                 'wrapper' => function ($value, $row) {
                     return '
-                        <a href="'.route("companies.users", $row->id).'" title="View Company Users" class="btn btn-xs"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                        <a href="'.route("companies.edit", $row->id).'" title="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                         <a href="'.route("companies.delete", $row->id).'" title="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                        <a href="'.route("companies.users", $row->id).'" title="View Company Users" class="btn btn-xs"><i class="fa fa-users" aria-hidden="true"></i></a>
+                        <a href="'.route("companies.edit", $row->id).'" title="Edit" class="btn btn-xs"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                         <a href="'.route("companies.delete", $row->id).'" title="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><i class="fa fa-remove" aria-hidden="true"></i></a>
                         ';
                 }
             ]);
@@ -102,6 +106,16 @@ class CompanyController extends Controller
             ->with('success','Company created successfully!');
     }
 
+    /**
+    * Show the company data
+    *
+    * @return Response
+    */
+    public function show($id)
+    {
+        $company =  $this->company->findorFail($id);
+        return view('Admin.companies.show', ['company' => $company]);
+    }
 
     /**
     * Show the form for edit a company.
@@ -171,7 +185,11 @@ class CompanyController extends Controller
         $grid = new \Datagrid($users, $request->get('f', []));
         $grid
             ->setColumn('id', 'Id')
-            ->setColumn('name', 'Name')
+            ->setColumn('name', 'Name', [
+                    'wrapper'     => function ($value, $row) {
+                        return '<a href="' .route('users.show', $row->id). '">' . $value . '</a>';
+                    }
+            ])
             ->setColumn('email', 'Email', [
                 'wrapper'     => function ($value, $row) {
                     return '<a href="mailto:' . $value . '">' . $value . '</a>';
