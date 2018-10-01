@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Aginev\SearchFilters\Filterable;
 use ReflectionClass;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB; 
 
 class User extends Authenticatable
 {
@@ -117,6 +118,22 @@ class User extends Authenticatable
         }
 
         return $options;
+    }
+
+    /**
+     * Get Users as array
+     *
+     * @param string $role
+     * @return array
+     */
+    public function userListByRole($role){
+        $users = User::select(
+            DB::raw("(first_name +' '+ last_name) AS name, id")
+         )
+        ->where('role',$role)
+        ->pluck('name', 'id');
+
+        return $users;
     }
 
 }

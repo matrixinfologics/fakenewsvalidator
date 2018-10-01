@@ -44,6 +44,10 @@
                             {{ Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirm Password']) }}
                             <span class="help-block">{{ $errors->first('password_confirmation') }}</span>
                         </div>
+                        <div class="form-group has-warning">
+                            {{ Form::text('company_id', null, ['class' => 'form-control', 'placeholder' => 'Company']) }}
+                            <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> Leave blank if you don't want to assign company.</span>
+                        </div>
                         <div class="box-footer">
                             {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
                         </div>
