@@ -7,8 +7,10 @@ use ReflectionClass;
 
 class Setting extends Model
 {
-    const TYPE_TWITTER_SECRET_KEY = 'twitter_secret_key';
-    const TYPE_TWITTER_PRIVATE_KEY = 'twitter_private_key';
+    const TYPE_TWITTER_CONSUMER_KEY = 'twitter_consumer_key';
+    const TYPE_TWITTER_CONSUMER_SECRET = 'twitter_consumer_secret';
+    const TYPE_TWITTER_ACCESS_TOKEN = 'twitter_access_token';
+    const TYPE_TWITTER_ACCESS_TOKEN_SECRET = 'twitter_access_token_secret';
 
     public $timestamps = false;
 

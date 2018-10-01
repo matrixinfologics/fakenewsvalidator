@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
+
 
 class Company extends Model
 {
@@ -21,4 +23,16 @@ class Company extends Model
     {
         return $this->hasMany('App\User');
     }
+
+
+     /**
+    * return full name of user
+    *
+    * @return string
+    */
+    public function getCompanyAdminAttribute()
+    {
+        return $this->users->where('role', User::ROLE_COMPANY_ADMIN)->first();
+    }
+
 }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Aginev\SearchFilters\Filterable;
 use ReflectionClass;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -34,6 +34,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get the company that owns the user.
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
 
     /**
      * To check role of Admin
@@ -127,13 +135,7 @@ class User extends Authenticatable
      * @return array
      */
     public function userListByRole($role){
-        $users = User::select(
-            DB::raw("(first_name +' '+ last_name) AS name, id")
-         )
-        ->where('role',$role)
-        ->pluck('name', 'id');
-
-        return $users;
+        return User::where('role', $role)->get()->pluck('name', 'id');
     }
 
 }

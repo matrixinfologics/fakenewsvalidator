@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
+use App\Company;
 use Hash;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -16,14 +17,19 @@ class UserController extends Controller
     /** @var User */
     private $user;
 
+    /** @var Company */
+    private $company;
+
     /**
      * UserController Consturctor
      *
      * @param User $user
+     * @param Company $company
      */
-    public function __construct(User $user)
+    public function __construct(User $user, Company $company)
     {
         $this->user = $user;
+        $this->company = $company;
     }
 
     /**
@@ -63,10 +69,15 @@ class UserController extends Controller
     *
     * @return Response
     */
-    public function create()
+    public function create(Request $request)
     {
+        $defaultCompany = null;
+        if($request->has('company')) {
+            $defaultCompany = $request->get('company');
+        }
         $roles =  $this->user->getRolesAsArray();
-        return view('Admin.users.create', ['roles' => $roles]);
+        $companies = $this->company->pluck('name', 'id');
+        return view('Admin.users.create', ['roles' => $roles, 'companies' => $companies, 'defaultCompany' => $defaultCompany]);
     }
 
     /**
@@ -82,6 +93,10 @@ class UserController extends Controller
         $this->user->email = $request->get('email');
         $this->user->role = $request->get('role');
         $this->user->password = Hash::make($request->get('password'));
+
+        // Assign company to user
+        $company = $this->company->find($request->get('company'));
+        $this->user->company()->associate($company);
         $this->user->save();
 
         return redirect(route('users.index'))
@@ -95,7 +110,7 @@ class UserController extends Controller
     */
     public function show($id)
     {
-        $user =  $this->user->find($id);
+        $user =  $this->user->findorFail($id);
         return view('Admin.users.show', ['user' => $user]);
     }
 
@@ -106,9 +121,10 @@ class UserController extends Controller
     */
     public function edit($id)
     {
-        $user =  $this->user->find($id);
+        $user =  $this->user->findorFail($id);
         $roles =  $this->user->getRolesAsArray();
-        return view('Admin.users.edit', ['user' => $user, 'roles' => $roles]);
+        $companies = $this->company->pluck('name', 'id');
+        return view('Admin.users.edit', ['user' => $user, 'roles' => $roles, 'companies' => $companies]);
     }
 
     /**
@@ -120,13 +136,19 @@ class UserController extends Controller
     */
     public function update(updateUser $request, $id)
     {
-        $user = $this->user->find($id);
+        $user = $this->user->findorFail($id);
         $user->first_name = $request->get('first_name');
         $user->last_name = $request->get('last_name');
         $user->email = $request->get('email');
         $user->role = $request->get('role');
         if ($request->get('password') !== null) {
             $user->password = Hash::make($request->get('password'));
+        }
+
+        // Assign company to user
+        if($request->has('company')) {
+            $company = $this->company->find($request->get('company'));
+            $user->company()->associate($company);
         }
 
         $user->save();
@@ -143,7 +165,7 @@ class UserController extends Controller
     */
     public function delete($id)
     {
-        $user = $this->user->find($id);
+        $user = $this->user->findorFail($id);
         $user->delete();
 
         return redirect(route('users.index'))

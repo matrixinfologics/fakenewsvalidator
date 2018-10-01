@@ -49,6 +49,9 @@ class CompanyController extends Controller
             ->setColumn('name', 'Name')
             ->setColumn('website', 'Website')
             ->setColumn('phone', 'Phone')
+            ->setColumn('companyAdmin', 'Admin', [
+                    'refers_to'   => 'companyAdmin.name'
+            ])
             ->setColumn('created_at', 'Created At')
             ->setColumn('updated_at', 'Updated At')
             ->setActionColumn([
@@ -72,9 +75,6 @@ class CompanyController extends Controller
     public function create()
     {
         $users = $this->user->userListByRole(User::ROLE_COMPANY_ADMIN);
-        echo '<prE>';
-        print_R($users);
-        die;
         return view('Admin.companies.create', ['users' => $users]);
     }
 
@@ -86,11 +86,17 @@ class CompanyController extends Controller
     */
     public function store(StoreCompany $request)
     {
+
         $this->company->name = $request->get('name');
         $this->company->website = $request->get('website');
         $this->company->phone = $request->get('phone');
         $this->company->address = $request->get('address');
+
         $this->company->save();
+
+        // Assign admin to company
+        $user = $this->user->find($request->get('admin'));
+        $this->company->users()->save($user);
 
         return redirect(route('companies.index'))
             ->with('success','Company created successfully!');
@@ -104,8 +110,9 @@ class CompanyController extends Controller
     */
     public function edit($id)
     {
-        $company =  $this->company->find($id);
-        return view('Admin.companies.edit', ['company' => $company]);
+        $company =  $this->company->findorFail($id);
+        $users = $this->user->userListByRole(User::ROLE_COMPANY_ADMIN);
+        return view('Admin.companies.edit', ['company' => $company, 'users' => $users]);
     }
 
     /**
@@ -117,7 +124,7 @@ class CompanyController extends Controller
     */
     public function update(updateCompany $request, $id)
     {
-        $company = $this->company->find($id);
+        $company = $this->company->findorFail($id);
 
         $company->name = $request->get('name');
         $company->website = $request->get('website');
@@ -125,6 +132,10 @@ class CompanyController extends Controller
         $company->address = $request->get('address');
 
         $company->save();
+
+         // Assign admin to company
+        $user = $this->user->find($request->get('admin'));
+        $company->users()->save($user);
 
         return redirect(route('companies.index'))
             ->with('success','Company updated successfully!');
@@ -138,7 +149,8 @@ class CompanyController extends Controller
     */
     public function delete($id)
     {
-        $company = $this->company->find($id);
+
+        $company = $this->company->findorFail($id);
         $company->delete();
 
         return redirect(route('companies.index'))
@@ -155,7 +167,7 @@ class CompanyController extends Controller
         $company = $this->company->findorFail($id);
 
         $users = $company->users()->paginate($this->pagination);
-        
+
         $grid = new \Datagrid($users, $request->get('f', []));
         $grid
             ->setColumn('id', 'Id')
@@ -175,16 +187,15 @@ class CompanyController extends Controller
                 }
             ]);
 
-        $page_title =  $company->name .' Users';
-
-        return view('Admin.companies.users', ['page_title' => $page_title, 'grid' => $grid]);
+        return view('Admin.companies.users', ['company' => $company, 'grid' => $grid]);
 
     }
 
     public function autocomplete(Request $request){
-        $query = $request->get('query','');        
 
-        $companies = Company::where('name','LIKE','%'.$query.'%')->get();        
+        $query = $request->get('query','');
+
+        $companies = Company::where('name','LIKE','%'.$query.'%')->get();
 
         return response()->json($companies);
     }

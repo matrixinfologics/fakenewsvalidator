@@ -7,7 +7,6 @@
             <li class="{{ Route::currentRouteName() == 'users.index'?'active':'' }}"><a href="{{ route('users.index') }}"><i class="fa fa-users"></i> <span>Users</span></a></li>
             <li class="{{ Route::currentRouteName() == 'companies.index'?'active':'' }}"><a href="{{ route('companies.index') }}"><i class="fa fa-globe"></i> <span>Companies</span></a></li>
             <li class="{{ Route::currentRouteName() == 'settings'?'active':'' }}"><a href="{{ route('settings') }}"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>
