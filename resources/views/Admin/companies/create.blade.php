@@ -32,9 +32,12 @@
                             {{ Form::text('address', '', ['class' => 'form-control', 'placeholder' => 'Address']) }}
                             <span class="help-block">{{ $errors->first('address') }}</span>
                         </div>
-                        <div class="form-group {{ $errors->first('user')?'has-error':'' }}">
-                            {{ Form::select('admin', $users, null, ['class' => 'form-control', 'placeholder' => 'Choose company admin']) }}
-                            <span class="help-block">{{ $errors->first('user') }}</span>
+                        <div class="form-group {{ $errors->first('admin')?'has-error':'' }}">
+                            {{ Form::select('admin', $users, null, ['class' => 'form-control select2', 'placeholder' => 'Choose company admin']) }}
+                            <span class="help-block">{{ $errors->first('admin') }}</span>
+                        </div>
+                        <div class="form-group has-warning">
+                               <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> If company admin is not available please <a href="{{ route('users.create')}}" title="Create User"> create new user</a></span>
                         </div>
                         <div class="box-footer">
                             {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}

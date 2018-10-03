@@ -29,7 +29,7 @@
                             <span class="help-block">{{ $errors->first('email') }}</span>
                         </div>
                         <div class="form-group {{ $errors->first('role')?'has-error':'' }}">
-                            {{ Form::select('role', $roles, null, ['class' => 'form-control', 'placeholder' => 'Role']) }}
+                            {{ Form::select('role', $roles, $defaultRole, ['class' => 'form-control', 'placeholder' => 'Role']) }}
                             <span class="help-block">{{ $errors->first('role') }}</span>
                         </div>
                         <div class="form-group {{ $errors->first('password')?'has-error':'' }}">
@@ -40,8 +40,8 @@
                             {{ Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirm Password']) }}
                             <span class="help-block">{{ $errors->first('password_confirmation') }}</span>
                         </div>
-                        <div class="form-group has-warning">
-                            {{ Form::select('company', $companies, $defaultCompany, ['class' => 'form-control', 'placeholder' => 'Company']) }}
+                        <div class="form-group has-warning" id="user_companies" style="display: none;">
+                            {{ Form::select('company', $companies, $defaultCompany, ['class' => 'form-control select2', 'placeholder' => 'Company']) }}
                             <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> Leave blank if you don't want to assign company.</span>
                         </div>
                         <div class="box-footer">

@@ -26,7 +26,8 @@ class StoreCompany extends FormRequest
         return [
             'name' => 'required|max:255',
             'phone' => 'required|max:255',
-            'address' => 'required'
+            'address' => 'required',
+            'admin' => 'required'
         ];
     }
 }

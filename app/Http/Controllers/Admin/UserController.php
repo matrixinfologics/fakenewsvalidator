@@ -76,12 +76,19 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $defaultCompany = null;
+        $defaultRole = null;
         if($request->has('company')) {
             $defaultCompany = $request->get('company');
+            $defaultRole = User::ROLE_USER;
         }
         $roles =  $this->user->getRolesAsArray();
         $companies = $this->company->pluck('name', 'id');
-        return view('Admin.users.create', ['roles' => $roles, 'companies' => $companies, 'defaultCompany' => $defaultCompany]);
+        return view('Admin.users.create', [
+            'roles' => $roles,
+            'companies' => $companies,
+            'defaultCompany' => $defaultCompany,
+            'defaultRole' => $defaultRole
+        ]);
     }
 
     /**
@@ -99,7 +106,7 @@ class UserController extends Controller
         $this->user->password = Hash::make($request->get('password'));
 
         // Assign company to user
-        if($request->filled('company')) {
+        if($request->filled('company') && $request->get('role') == User::ROLE_USER) {
             $company = $this->company->find($request->get('company'));
             $this->user->company()->associate($company);
         }

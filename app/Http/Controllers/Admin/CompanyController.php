@@ -78,7 +78,7 @@ class CompanyController extends Controller
     */
     public function create()
     {
-        $users = $this->user->userListByRole(User::ROLE_COMPANY_ADMIN);
+        $users = User::where('role', User::ROLE_COMPANY_ADMIN)->whereNull('company_id')->get()->pluck('name', 'id');
         return view('Admin.companies.create', ['users' => $users]);
     }
 
@@ -127,7 +127,7 @@ class CompanyController extends Controller
     public function edit($id)
     {
         $company =  $this->company->findorFail($id);
-        $users = $this->user->userListByRole(User::ROLE_COMPANY_ADMIN);
+        $users = $users = User::where('role', User::ROLE_COMPANY_ADMIN)->whereNull('company_id')->orWhere('company_id', $id)->get()->pluck('name', 'id');
         return view('Admin.companies.edit', ['company' => $company, 'users' => $users]);
     }
 
@@ -151,8 +151,14 @@ class CompanyController extends Controller
 
         // Assign admin to company
         if($request->filled('admin')) {
+            // Remove old company admin
+            $oldUser = $this->user->find($company->companyAdmin->id);
+            $oldUser->company()->dissociate($company);
+            $oldUser->save();
+
             $user = $this->user->find($request->get('admin'));
             $company->users()->save($user);
+
         }
 
         return redirect(route('companies.index'))

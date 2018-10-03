@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->enum('role', ['admin', 'company_admin', 'user'])
                 ->default('user');
             $table->unsignedInteger('company_id')->nullable();
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
             $table->timestamps();
         });
     }

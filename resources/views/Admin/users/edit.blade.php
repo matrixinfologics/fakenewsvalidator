@@ -44,8 +44,8 @@
                             {{ Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirm Password']) }}
                             <span class="help-block">{{ $errors->first('password_confirmation') }}</span>
                         </div>
-                        <div class="form-group has-warning">
-                            {{ Form::select('company', $companies, isset($user->company) ?$user->company->id: null, ['class' => 'form-control', 'placeholder' => 'Company']) }}
+                        <div class="form-group has-warning" id="user_companies" style="display: none;">
+                            {{ Form::select('company', $companies, isset($user->company) ?$user->company->id: null, ['class' => 'form-control select2', 'placeholder' => 'Company']) }}
                             <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> Leave blank if you don't want to assign company.</span>
                         </div>
                         <div class="box-footer">
