@@ -9,10 +9,12 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Company Info</h3>
-                    <a href="{{ route('companies.index') }}" title="Back" class="btn btn-sm btn-primary pull-right">
-                        <i class="glyphicon glyphicon-fast-backward"></i>
-                         Back
-                    </a>
+                    @if(!Auth::user()->isCompanyAdmin())
+                        <a href="{{ route('companies.index') }}" title="Back" class="btn btn-sm btn-primary pull-right">
+                            <i class="glyphicon glyphicon-fast-backward"></i>
+                             Back
+                        </a>
+                    @endif
                 </div>
                  {{ Form::model($company, ['url'=> route('companies.update', $company->id), 'method' => 'PUT']) }}
                     <div class="box-body">
@@ -32,13 +34,15 @@
                             {{ Form::text('address', null, ['class' => 'form-control', 'placeholder' => 'Address']) }}
                             <span class="help-block">{{ $errors->first('address') }}</span>
                         </div>
-                         <div class="form-group {{ $errors->first('user')?'has-error':'' }}">
-                            {{ Form::select('admin', $users, isset($company->companyAdmin->id) ? $company->companyAdmin->id : null, ['class' => 'form-control select2', 'placeholder' => 'Choose company admin']) }}
-                            <span class="help-block">{{ $errors->first('user') }}</span>
-                        </div>
-                         <div class="form-group has-warning">
-                               <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> If company admin is not available please <a href="{{ route('users.create')}}" title="Create User"> create new user</a></span>
-                        </div>
+                        @if(!Auth::user()->isCompanyAdmin())
+                             <div class="form-group {{ $errors->first('user')?'has-error':'' }}">
+                                {{ Form::select('admin', $users, isset($company->companyAdmin->id) ? $company->companyAdmin->id : null, ['class' => 'form-control select2', 'placeholder' => 'Choose company admin']) }}
+                                <span class="help-block">{{ $errors->first('user') }}</span>
+                            </div>
+                             <div class="form-group has-warning">
+                                   <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> If company admin is not available please <a href="{{ route('users.create')}}" title="Create User"> create new user</a></span>
+                            </div>
+                        @endif
                         <div class="box-footer">
                             {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
                         </div>

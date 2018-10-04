@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use App\Company;
 use Hash;
+use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Requests\Admin\StoreCompany;
@@ -161,8 +162,12 @@ class CompanyController extends Controller
 
         }
 
+        if( Auth::user()->isCompanyAdmin()) {
+            return redirect()->back()->with('success','Company updated successfully!');
+        }
+
         return redirect(route('companies.index'))
-            ->with('success','Company updated successfully!');
+                ->with('success','Company updated successfully!');
     }
 
     /**

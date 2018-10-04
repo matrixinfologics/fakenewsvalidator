@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use App\Company;
 use Hash;
+use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Requests\Admin\StoreUser;
@@ -19,6 +20,8 @@ class UserController extends Controller
 
     /** @var Company */
     private $company;
+
+    private $pagination = 10;
 
     /**
      * UserController Consturctor
@@ -40,8 +43,12 @@ class UserController extends Controller
     */
     public function index(Request $request)
     {
-        $users = $this->user->paginate(10);
-
+        if( Auth::user()->isCompanyAdmin()) {
+            $users = Auth::user()->company->users()->paginate($this->pagination);
+        } else {
+            $users = $this->user->paginate($this->pagination);
+        }
+        // $users = $this->user->paginate(10);
         $grid = new \Datagrid($users, $request->get('f', []));
         $grid
             ->setColumn('id', 'Id')
@@ -183,6 +190,6 @@ class UserController extends Controller
         $user->delete();
 
         return redirect(route('users.index'))
-            ->with('success','User updated successfully!');
+            ->with('success','User deleted successfully!');
     }
 }

@@ -1,7 +1,7 @@
 <!-- Main Header -->
 <header class="main-header">
     <!-- Logo -->
-    <a href="/" class="logo">
+    <a href="/admin" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini">Fake News Validator</span>
         <!-- logo for regular state and mobile devices -->

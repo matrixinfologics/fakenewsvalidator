@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Aginev\SearchFilters\Filterable;
+use Illuminate\Http\Request;
 use ReflectionClass;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
@@ -83,6 +84,38 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    /**
+     * To check permission
+     *
+     * @param Request $request
+     * @return boolean
+     */
+    public function hasPermissionToAction($request)
+    {
+        if($request->route('user')) {
+            $user = User::find($this->id);
+            $userCount = $user->company->users()->where('id', $request->route('user'))->count();
+
+            if ($userCount > 0){
+                return true;
+            }
+
+            return false;
+        }
+
+        if($request->route('company')) {
+            $user = User::find($this->id);
+            if($user->company->id == $request->route('company')){
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+
     }
 
     /**

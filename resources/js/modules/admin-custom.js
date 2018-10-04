@@ -11,6 +11,8 @@ $(document).ready(function(){
 
      // Init select2
     $('.select2').select2();
+    // Disable Select box
+    jQuery('select.readonly option:not(:selected)').attr('disabled',true);
 
     // Populate company field in user creation edition
     if($('select[name="role"]').val() == 'user'){

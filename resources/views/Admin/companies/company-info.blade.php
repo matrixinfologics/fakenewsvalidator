@@ -19,14 +19,16 @@
                     <dd>{{{ $company->address }}}</dd>
 
                 </dl>
-                 <a href="{{ route('companies.index') }}" title="Back to company list" class="btn btn-sm btn-warning pull-left">
-                    <i class="glyphicon glyphicon-fast-backward"></i>
-                     Back
-                </a>
-                <a href="{{ route('companies.edit', $company->id) }}" title="Edit User" class="btn btn-sm btn-primary pull-right">
-                    <i class="glyphicon glyphicon-pencil"></i>
-                     Edit Company
-                </a>
+                @if (!Auth::user()->isCompanyAdmin())
+                     <a href="{{ route('companies.index') }}" title="Back to company list" class="btn btn-sm btn-warning pull-left">
+                        <i class="glyphicon glyphicon-fast-backward"></i>
+                         Back
+                    </a>
+                    <a href="{{ route('companies.edit', $company->id) }}" title="Edit User" class="btn btn-sm btn-primary pull-right">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                         Edit Company
+                    </a>
+                @endif
             </div>
         </div>
     </div>

@@ -19,7 +19,7 @@ Route::get('/logout', 'LoginController@doLogout')->name('admin.logout');
 Route::group(['middleware' => ['admin']], function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     // Users Management
-    Route::get('users/delete/{id}', 'UserController@delete')->name('users.delete');
+    Route::get('users/delete/{user}', 'UserController@delete')->name('users.delete');
     Route::resource('users', 'UserController');
     //Company management
     Route::get('companies/delete/{id}', 'CompanyController@delete')->name('companies.delete');
