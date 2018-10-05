@@ -31,7 +31,7 @@ class Admin
             }
         } else {
             Auth::logout();
-            return Redirect::to(route('admin.login'));
+            return Redirect::to(route('admin.login'))->withErrors('You are not authorised user!');
         }
 
         return $next($request);

@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-       // $this->middleware('auth');
+       $this->middleware('auth:front');
     }
 
     /**
@@ -25,17 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        echo Auth::id();
-        die;
         return view('Front.home');
     }
 
-    /**
-     * Front is the guard for front.
-     * @return mixed
-     */
-    protected function guard()
-    {
-        return auth()->guard('front');
-    }
 }
