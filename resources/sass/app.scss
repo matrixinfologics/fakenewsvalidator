@@ -1,9 +1,7 @@
 
 // Import all manually installed libraries
-@import "./libs/bootstrap.min";
+@import '../../node_modules/bootstrap/dist/css/bootstrap.min';
 @import "./libs/font-awesome.min";
 
 // Common css
 @import 'app-custom';
-
-

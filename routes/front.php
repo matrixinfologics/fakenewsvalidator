@@ -17,5 +17,5 @@ Route::post('/login', 'LoginController@doLogin')->name('login');
 Route::get('/logout', 'LoginController@doLogout')->name('logout');
 
 Route::group(['middleware' => ['auth:front', 'front']], function () {
-    Route::get('/', 'HomeController@index');
+    Route::get('/', 'CasesController@index');
 });

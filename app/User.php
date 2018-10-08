@@ -45,6 +45,14 @@ class User extends Authenticatable
     }
 
     /**
+    * Get cases of user.
+    */
+    public function cases()
+    {
+        return $this->hasMany('App\NewsCase');
+    }
+
+    /**
      * To check role of Admin
      *
      * @return boolean
