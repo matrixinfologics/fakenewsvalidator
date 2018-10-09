@@ -10,10 +10,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-new-case" href="#">New Case</a>
+                    <a class="nav-new-case" href="{{ route('newcase') }}">New Case</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-search" href="#">Search Case</a>
+                    <a class="nav-search" href="{{ url('/') }}">Search Case</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-logout" href="{{ route('logout') }}">Logout</a>

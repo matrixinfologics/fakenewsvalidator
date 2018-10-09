@@ -1,3 +1,6 @@
+@php
+$withoutSidebar = isset($withoutSidebar)??false;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -24,8 +27,8 @@
             <!--Info Top---->
             <div class="inner-info">
                 <div class="container">
-                    <h3 class="info-head">@yield('page-header')</h3>
                     @include('layouts.flash-message')
+                    <h3 class="info-head">@yield('page-header')</h3>
                     @yield('content')
                 </div>
             </div>

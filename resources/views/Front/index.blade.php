@@ -24,13 +24,14 @@
                       <tbody>
                         @foreach($cases as $case)
                             <tr>
-                              <td><a href="#">{{ $case->title }}</a></td>
+                              <td><a href="{{ route('caseinfo', $case->id) }}" title="{{ $case->title }}">{{ $case->title }}</a></td>
                               <td>{{ $case->user? $case->user->name:'' }} {{ $case->created_at->format('d/m/Y h:i') }}</td>
                               <td>In Analysis</td>
                             </tr>
                         @endforeach
                       </tbody>
                     </table>
+                    {{ $cases->links() }}
                   </div><!--end of .table-responsive-->
                 </div>
             </div>

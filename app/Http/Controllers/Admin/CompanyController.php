@@ -96,6 +96,10 @@ class CompanyController extends Controller
         $this->company->website = $request->get('website');
         $this->company->phone = $request->get('phone');
         $this->company->address = $request->get('address');
+        $this->company->twitter_consumer_key = $request->get('twitter_consumer_key');
+        $this->company->twitter_consumer_secret = $request->get('twitter_consumer_secret');
+        $this->company->twitter_access_token = $request->get('twitter_access_token');
+        $this->company->twitter_access_token_secret = $request->get('twitter_access_token_secret');
 
         $this->company->save();
 
@@ -116,6 +120,10 @@ class CompanyController extends Controller
     */
     public function show($id)
     {
+        $details = $this->company->getCompanyTwitterDetails($id);
+        echo "<pre>";
+        print_r($details);
+        die;
         $company =  $this->company->findorFail($id);
         return view('Admin.companies.show', ['company' => $company]);
     }
@@ -147,6 +155,10 @@ class CompanyController extends Controller
         $company->website = $request->get('website');
         $company->phone = $request->get('phone');
         $company->address = $request->get('address');
+        $company->twitter_consumer_key = $request->get('twitter_consumer_key');
+        $company->twitter_consumer_secret = $request->get('twitter_consumer_secret');
+        $company->twitter_access_token = $request->get('twitter_access_token');
+        $company->twitter_access_token_secret = $request->get('twitter_access_token_secret');
 
         $company->save();
 

@@ -8,7 +8,7 @@
         <div class="col-md-6">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Twitter API Settings</h3>
+                    <h3 class="box-title">Default Twitter API Settings</h3>
                 </div>
                 {{ Form::open(['url'=> route('settings.store')]) }}
                     <div class="box-body">

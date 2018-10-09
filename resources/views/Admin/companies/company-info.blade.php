@@ -18,6 +18,18 @@
                     <dt>Address:</dt>
                     <dd>{{{ $company->address }}}</dd>
 
+                    <dt>Twitter Consumer Key:</dt>
+                    <dd>{{{ $company->twitter_consumer_key }}}</dd>
+
+                    <dt>Twitter Consumer Secret:</dt>
+                    <dd>{{{ $company->twitter_consumer_secret }}}</dd>
+
+                    <dt>Twitter Access Token:</dt>
+                    <dd>{{{ $company->twitter_access_token }}}</dd>
+
+                    <dt>Twitter Access Token Secret:</dt>
+                    <dd>{{{ $company->twitter_access_token_secret }}}</dd>
+
                 </dl>
                 @if (!Auth::user()->isCompanyAdmin())
                      <a href="{{ route('companies.index') }}" title="Back to company list" class="btn btn-sm btn-warning pull-left">

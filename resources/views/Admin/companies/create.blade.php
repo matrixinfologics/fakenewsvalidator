@@ -39,6 +39,25 @@
                         <div class="form-group has-warning">
                                <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> If company admin is not available please <a href="{{ route('users.create')}}" title="Create User"> create new user</a></span>
                         </div>
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Twitter API Details</h3>
+                        </div>
+                        <div class="form-group {{ $errors->first('twitter_consumer_key')?'has-error':'' }}">
+                            {{ Form::text('twitter_consumer_key', '', ['class' => 'form-control', 'placeholder' => 'Twitter Consumer Key']) }}
+                            <span class="help-block">{{ $errors->first('twitter_consumer_key') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->first('twitter_consumer_secret')?'has-error':'' }}">
+                            {{ Form::text('twitter_consumer_secret', '', ['class' => 'form-control', 'placeholder' => 'Twitter Consumer Secret']) }}
+                            <span class="help-block">{{ $errors->first('twitter_consumer_secret') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->first('twitter_access_token')?'has-error':'' }}">
+                            {{ Form::text('twitter_access_token', '', ['class' => 'form-control', 'placeholder' => 'Twitter Access Token']) }}
+                            <span class="help-block">{{ $errors->first('twitter_access_token') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->first('twitter_access_token_secret')?'has-error':'' }}">
+                            {{ Form::text('twitter_access_token_secret', '', ['class' => 'form-control', 'placeholder' => 'Twitter Access Token Secret']) }}
+                            <span class="help-block">{{ $errors->first('twitter_access_token_secret') }}</span>
+                        </div>
                         <div class="box-footer">
                             {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
                         </div>
