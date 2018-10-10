@@ -5,11 +5,11 @@
     </div>
 
     <ul class="list-unstyled components">
-        <li class="active">
-            <a href="#">Info</a>
+        <li class="{{ Route::currentRouteName() == 'caseinfo'?'active':'' }}">
+            <a href="{{ route('caseinfo', $case) }}" >Info</a>
         </li>
         <li>
-            <a href="#">About</a>
+            <a href="#">Post Analysis</a>
         </li>
         <li>
             <a href="#">Replies</a>
@@ -27,7 +27,7 @@
             <a href="#">Similar Posts</a>
         </li>
         <li>
-            <a href="#">Similar Posts From SameArea</a>
+            <a href="#">Similar Posts From Same Area</a>
         </li>
         <li>
             <a href="#">Image Search Verification</a>

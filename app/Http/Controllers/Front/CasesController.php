@@ -22,7 +22,7 @@ class CasesController extends Controller
     /** @var TwitterManager */
     private $twitterManager;
 
-    private $pagination = 1;
+    private $pagination = 10;
     /**
      * Create a new controller instance.
      *

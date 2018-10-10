@@ -10,7 +10,7 @@
                         <div class="row">
                             {{ Form::open(['method' => 'GET', 'url'=> route('cases')]) }}
                                 {{ Form::text('s', request()->has('s')? request()->get('s'):null, ['placeholder' => 'Search']) }}
-                                {{ Form::submit('Search') }}
+                                {{ Form::button('', ['type' => 'submit']) }}
                             {{ Form::close() }}
                         </div>
                     </div>

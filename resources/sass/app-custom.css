@@ -7,8 +7,8 @@
         box-shadow: 0 0 50px #ccc;
         margin: 0 auto;
 }
-form {
-    width: 60%;
+.case-search-bar form {
+    width: 100%;
     margin: 0 auto;
 }
 .main-login {
@@ -64,11 +64,21 @@ form {
 }
 input.btn.btn-primary {
     color: #3d4958 !important;
+    padding: 8px 0 8px 0 !important;
+    transition: 0.5s;
 }
-.btn-primary:hover{
-transform: scale(1.2);
-transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+.form-main .has-error span.help-block {
+    color: red;
+    border-color: red;
+    width: 100% !important;
+    display: inline-block;
+    position: relative;
+    top: 3px;
 }
+.has-error .form-control {
+    border-bottom: 1px solid red !important;
+}
+
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
     background-color: #fff !important;
     position: relative;
@@ -92,6 +102,7 @@ form label {
 }
 .animate-input{ border-bottom: 2px solid #fff!important;}
 .remove-animate{transition:.3s;}
+
 
 /****END LOGIN****/
 
@@ -436,6 +447,9 @@ table caption {
     color: #fff;
     border: none;
     cursor: pointer;
+    padding: 8px 10px 11px 10px;
+    position: relative;
+    right: 5px;
 }
 .case-search-bar button:after {
     content: '\f002';
@@ -574,6 +588,36 @@ a.btn.fake-result:hover {
 }
 /* TABLE STYLE END */
 
+.case-search-bar input[type="submit"] {
+    background: #3d4958;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 10px 0 10px 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #3d4958;
+    border-color: #3d4958;
+}
+
+.page-item .page-link {
+    z-index: 1;
+    color: #3d4958;
+    border-color: #3d4958;
+}
+
+.case-search-bar {
+    max-width: 100%;
+}
+
 
 /* ---------------------------------------------------
     MEDIAQUERIES
@@ -586,7 +630,7 @@ a.btn.fake-result:hover {
     .inner-info-content img {
     width: 100%;
     }
-    form {width: 80%;}
+    form {width: 100%;}
 .form-main {width: 80%;}
 .ml-auto {
     margin-left: auto!important;
@@ -633,7 +677,7 @@ li.nav-item {
 .case-search-bar input {
     padding: 9px 32px 9px 10px;
 }
-form {width: 100%;}
+.case-search-bar form {width: 100%;}
 .form-main {width: 100%;}
 .ml-auto {
     margin-left: auto!important;
@@ -663,7 +707,7 @@ li.nav-item {
     font-size: 10px;
 }
 .case-search-bar input {
-    padding: 9px 0px 9px 10px;
+    padding: 14px 0px 12px 10px;
 }
 .case-search-bar input {
     font-size: 11px;
