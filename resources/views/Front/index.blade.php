@@ -8,8 +8,10 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="case-search-bar col-md-12 col-sm-8 col-xs-11">
                         <div class="row">
-                            <input placeholder="Search">
-                            <button type="submit"></button>
+                            {{ Form::open(['method' => 'GET', 'url'=> route('cases')]) }}
+                                {{ Form::text('s', request()->has('s')? request()->get('s'):null, ['placeholder' => 'Search']) }}
+                                {{ Form::submit('Search') }}
+                            {{ Form::close() }}
                         </div>
                     </div>
                   <div class="table-responsive">
@@ -22,16 +24,22 @@
                         </tr>
                       </thead>
                       <tbody>
-                        @foreach($cases as $case)
+                        @if(!$cases->isEmpty())
+                            @foreach($cases as $case)
+                                <tr>
+                                  <td><a href="{{ route('caseinfo', $case->id) }}" title="{{ $case->title }}">{{ $case->title }}</a></td>
+                                  <td>{{ $case->user? $case->user->name:'' }} {{ $case->created_at->format('d/m/Y h:i') }}</td>
+                                  <td>In Analysis</td>
+                                </tr>
+                            @endforeach
+                        @else
                             <tr>
-                              <td><a href="{{ route('caseinfo', $case->id) }}" title="{{ $case->title }}">{{ $case->title }}</a></td>
-                              <td>{{ $case->user? $case->user->name:'' }} {{ $case->created_at->format('d/m/Y h:i') }}</td>
-                              <td>In Analysis</td>
+                                <td colspan="3">No Result Found</td>
                             </tr>
-                        @endforeach
+                        @endif
                       </tbody>
                     </table>
-                    {{ $cases->links() }}
+                    {{ $cases->appends(['s' => request()->get('s')])->links() }}
                   </div><!--end of .table-responsive-->
                 </div>
             </div>
