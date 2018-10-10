@@ -22,7 +22,7 @@ class CasesController extends Controller
     /** @var TwitterManager */
     private $twitterManager;
 
-    private $pagination = 10;
+    private $pagination = 1;
     /**
      * Create a new controller instance.
      *
@@ -44,9 +44,16 @@ class CasesController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cases = $this->case->paginate($this->pagination);
+        $cases = $this->case;
+        // Search Case
+        if($request->has('s')) {
+            $search = $request->get('s');
+            $cases = $cases->where('title','LIKE',"%{$search}%");
+        }
+
+        $cases = $cases->paginate($this->pagination);
         return view('Front.index', ['cases' => $cases]);
     }
 
@@ -68,7 +75,9 @@ class CasesController extends Controller
     */
     public function storeCase(StoreCase $request)
     {
+        // Set Twitter config
         $this->setTwitterConfig();
+
         // Verify Tweet
         $url = explode('/', rtrim($request->get('url'),"/"));
         $tweetId = end($url);
@@ -77,6 +86,12 @@ class CasesController extends Controller
         if(!$tweet){
             return redirect()->back()
                         ->with('error', 'Invalid Tweet URL, Please try again.')
+                        ->withInput();
+        }
+        // Check tweet is unique
+        if(!$this->isUniqueTweet($tweet->id)) {
+            return redirect()->back()
+                        ->with('error', 'Tweet is already exist, Please try again.')
                         ->withInput();
         }
 
@@ -127,4 +142,20 @@ class CasesController extends Controller
         $config = $this->company->getCompanyTwitterDetails();
         $this->twitterManager->setConfig($config);
     }
+
+    /**
+     * Set Twitter config details
+     *
+     * @param int $tweetId
+     * @return boolean
+     */
+    public function isUniqueTweet($tweetId){
+        $tweetCount = $this->case->where('tweet_id', $tweetId)->count();
+
+        if($tweetCount < 0) {
+            return true;
+        }
+        return false;
+    }
+
 }

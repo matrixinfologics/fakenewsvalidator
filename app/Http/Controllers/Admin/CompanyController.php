@@ -121,9 +121,7 @@ class CompanyController extends Controller
     public function show($id)
     {
         $details = $this->company->getCompanyTwitterDetails($id);
-        echo "<pre>";
-        print_r($details);
-        die;
+
         $company =  $this->company->findorFail($id);
         return view('Admin.companies.show', ['company' => $company]);
     }
