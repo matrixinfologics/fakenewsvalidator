@@ -5,7 +5,7 @@ namespace App\Http\Requests\Front;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
-class updateCase extends FormRequest
+class UpdateCase extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class updateCase extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'url' => 'required|max:255'
+            'keywords' => 'required'
         ];
     }
 }

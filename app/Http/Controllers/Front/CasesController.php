@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\Front\StoreCase;
+use App\Http\Requests\Front\UpdateCase;
 use App\Http\Controllers\Controller;
 use Auth;
 use App\NewsCase;
@@ -131,6 +132,37 @@ class CasesController extends Controller
                             ->with('error', 'Invalid Tweet URL, Please try again.')
                             ->withInput();
         }
+    }
+
+    /**
+     * Show the Edit case form
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function editCase($id)
+    {
+        $case = $this->case->findorFail($id);
+        return view('Front.editcase', ['case' => $case]);
+    }
+
+    /**
+    * Update case in database
+    *
+    * @param UpdateCase $request
+    * @param int $id
+    * @return Response
+    */
+    public function updateCase(UpdateCase $request, $id)
+    {
+        $case = $this->case->findorFail($id);
+        $case->title = $request->get('title');
+        $case->keywords = $request->get('keywords');
+
+        $case->save();
+
+        return redirect(route('caseinfo', $case->id))
+            ->with('success','Case updated successfully!');
     }
 
     /**
