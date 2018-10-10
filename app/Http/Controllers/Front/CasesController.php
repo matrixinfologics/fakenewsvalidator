@@ -152,7 +152,7 @@ class CasesController extends Controller
     public function isUniqueTweet($tweetId){
         $tweetCount = $this->case->where('tweet_id', $tweetId)->count();
 
-        if($tweetCount < 0) {
+        if($tweetCount < 1) {
             return true;
         }
         return false;

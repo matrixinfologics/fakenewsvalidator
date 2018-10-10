@@ -53,7 +53,7 @@ class LoginController extends Controller
         } else {
             if (Auth::attempt($credentials)) {
                 Auth::login(Auth::user(), true);
-                return redirect()->intended('admin');
+                return redirect(route('dashboard'));
             } else {
                 return Redirect::to(route('admin.login'))
                     ->withErrors('Invalid Credentials, Please try again.')
