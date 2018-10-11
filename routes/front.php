@@ -22,7 +22,12 @@ Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::get('/new', 'CasesController@newCase')->name('newcase');
     Route::post('/new', 'CasesController@storeCase')->name('newcase');
 
+    Route::post('/section-flag/{section}/{case}', 'CasesController@flagCaseBySection')->name('section-flag');
+
     Route::get('/info/{case}', 'CasesController@caseInfo')->name('caseinfo');
+    Route::get('/analysis/{case}', 'CasesController@postAnalysis')->name('analysis');
+    Route::get('/author-posts/{case}', 'CasesController@authorPosts')->name('author-posts');
+    Route::get('/post-location/{case}', 'CasesController@geoLocationMap')->name('post-location');
 
     Route::get('/edit/{case}', 'CasesController@editCase')->name('editcase');
     Route::post('/edit/{case}', 'CasesController@updateCase')->name('editcase');

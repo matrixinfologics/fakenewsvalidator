@@ -162,6 +162,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Aginev\Datagrid\DatagridServiceProvider::class,
         Thujohn\Twitter\TwitterServiceProvider::class,
+        Cornford\Googlmapper\MapperServiceProvider::class,
 
     ],
 
@@ -215,6 +216,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Datagrid' => Aginev\Datagrid\Datagrid::class,
         'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
+        'Mapper'         => Cornford\Googlmapper\Facades\MapperFacade::class,
     ],
 
 ];

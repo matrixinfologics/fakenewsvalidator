@@ -8,8 +8,10 @@ use App\Http\Requests\Front\StoreCase;
 use App\Http\Requests\Front\UpdateCase;
 use App\Http\Controllers\Controller;
 use Auth;
+use Mapper;
 use App\NewsCase;
 use App\Company;
+use App\CaseSectionResult;
 use App\Classes\TwitterManager;
 
 class CasesController extends Controller
@@ -38,6 +40,52 @@ class CasesController extends Controller
        $this->case = $case;
        $this->company = $company;
        $this->twitterManager = $twitterManager;
+    }
+
+    /**
+     * Set Twitter config details
+     *
+     * @return none
+     */
+    public function setTwitterConfig(){
+        $config = $this->company->getCompanyTwitterDetails();
+        $this->twitterManager->setConfig($config);
+    }
+
+    /**
+     * Set Twitter config details
+     *
+     * @param int $tweetId
+     * @return boolean
+     */
+    public function isUniqueTweet($tweetId){
+        $tweetCount = $this->case->where('tweet_id', $tweetId)->count();
+
+        if($tweetCount < 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Flag a case from section
+     *
+     * @param Request $request
+     * @param int $sectionId
+     * @param int $caseId
+     * @return boolean
+     */
+    public function flagCaseBySection(Request $request, $sectionId, $caseId){
+        $caseSectionResult = new CaseSectionResult;
+        $caseSectionResult->case_id = $caseId;
+        $caseSectionResult->section_id = $sectionId;
+        $caseSectionResult->flag = $request->get('flag');
+
+        $caseSectionResult->user()->associate(Auth::user());
+        $caseSectionResult->save();
+
+        return redirect()->back()
+            ->with('success','Case Flaged successfully!');
     }
 
     /**
@@ -101,6 +149,7 @@ class CasesController extends Controller
         $this->case->keywords = $request->get('keywords');
         $this->case->tweet_id = $tweet->id;
         $this->case->location = $tweet->user->location;
+        $this->case->tweet_author = $tweet->user->screen_name;
 
         // Assign user to case
         $this->case->user()->associate(Auth::user());
@@ -110,7 +159,6 @@ class CasesController extends Controller
         return redirect(route('caseinfo', $this->case->id))
             ->with('success','Case created successfully!');
     }
-
 
     /**
      * Show the case info
@@ -129,7 +177,7 @@ class CasesController extends Controller
             return view('Front.sections.info', ['case' => $case, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
             return redirect('/')
-                            ->with('error', 'Invalid Tweet URL, Please try again.')
+                            ->with('error', 'Something went wrong! Please try again.')
                             ->withInput();
         }
     }
@@ -166,28 +214,69 @@ class CasesController extends Controller
     }
 
     /**
-     * Set Twitter config details
+     * Post Analysis Section
      *
-     * @return none
+     * @param int $id
+     * @return Response
      */
-    public function setTwitterConfig(){
-        $config = $this->company->getCompanyTwitterDetails();
-        $this->twitterManager->setConfig($config);
+    public function postAnalysis($id)
+    {
+        try{
+            $case = $this->case->findorFail($id);
+
+            $this->setTwitterConfig();
+            $tweetPreview = $this->twitterManager->getTweetPreview($case->url);
+
+            return view('Front.sections.analysis', ['case' => $case, 'tweetPreview' => $tweetPreview]);
+        } catch(\Exception $e){
+            return redirect('/')
+                            ->with('error', 'Invalid Tweet, Please try again.')
+                            ->withInput();
+        }
+    }
+
+
+    /**
+     * Author Latest Posts
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function authorPosts($id)
+    {
+        try{
+            $sectionId = NewsCase::SECTION_AUTHOR_LATEST_POSTS;
+            $case = $this->case->findorFail($id);
+
+            $this->setTwitterConfig();
+            $authorPosts = $this->twitterManager->getAuthorPosts($case->tweet_author);
+
+            return view('Front.sections.authorposts', ['case' => $case, 'sectionId' => $sectionId, 'authorPosts' => $authorPosts]);
+        } catch(\Exception $e){
+            return redirect('/')
+                            ->with('error', 'Invalid Tweet, Please try again.')
+                            ->withInput();
+        }
     }
 
     /**
-     * Set Twitter config details
+     * Geo Location map
      *
-     * @param int $tweetId
-     * @return boolean
+     * @param int $id
+     * @return Response
      */
-    public function isUniqueTweet($tweetId){
-        $tweetCount = $this->case->where('tweet_id', $tweetId)->count();
+    public function geoLocationMap($id)
+    {
+        $sectionId = NewsCase::SECTION_AUTHOR_LATEST_POSTS;
+        $case = $this->case->findorFail($id);
 
-        if($tweetCount < 1) {
-            return true;
-        }
-        return false;
+        $location = Mapper::location($case->location);
+
+        Mapper::map($location->getLatitude(), $location->getLongitude());
+
+        return view('Front.sections.geolocation', ['case' => $case, 'sectionId' => $sectionId]);
     }
+
+
 
 }

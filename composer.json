@@ -12,7 +12,8 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "~5.0",
         "predis/predis": "^1.1",
-        "thujohn/twitter": "^2.2"
+        "thujohn/twitter": "^2.2",
+        "cornford/googlmapper": "2.*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
