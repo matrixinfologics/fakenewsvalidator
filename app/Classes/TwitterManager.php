@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Company;
+use App\NewsCase;
 use Auth;
 use Thujohn\Twitter\Twitter as twitterConfig;
 use Twitter;
@@ -93,6 +94,68 @@ class TwitterManager
             }
 
             return $authorPosts;
+        } catch (RunTimeException $e) {
+            throw new \Exception("Please provide correct detail!");
+        }
+    }
+
+    /**
+     * get similar posts of a post
+     *
+     * @param NewsCase $case
+     * @return array
+     */
+    public function getSimilarPosts($case){
+        try{
+            $tweets = Twitter::getSearch(['q' => $case->title, 'count' => 20,  'max_id' => $case->tweet_id]);
+
+            $similarPosts = [];
+
+            $i =1;
+            foreach ($tweets->statuses as $key => $tweet) {
+
+                if($i == 5)
+                    continue;
+
+                $url = 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id;
+                $tweetPreview = Twitter::getOembed(['url' => $url, 'hide_media' => true, 'maxwidth' => 550]);
+
+                $similarPosts[] = $tweetPreview->html;
+                $i++;
+            }
+
+            return $similarPosts;
+        } catch (RunTimeException $e) {
+            throw new \Exception("Please provide correct detail!");
+        }
+    }
+
+    /**
+     * get same area posts
+     *
+     * @param NewsCase $case
+     * @return array
+     */
+    public function getSameAreaPosts($case){
+        try{
+            $tweets = Twitter::getSearch(['q' => $case->location, 'count' => 20, 'max_id' => $case->tweet_id]);
+
+            $similarPosts = [];
+
+            $i =1;
+            foreach ($tweets->statuses as $key => $tweet) {
+
+                if($i == 5)
+                    continue;
+
+                $url = 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id;
+                $tweetPreview = Twitter::getOembed(['url' => $url, 'hide_media' => true, 'maxwidth' => 550]);
+
+                $similarPosts[] = $tweetPreview->html;
+                $i++;
+            }
+
+            return $similarPosts;
         } catch (RunTimeException $e) {
             throw new \Exception("Please provide correct detail!");
         }

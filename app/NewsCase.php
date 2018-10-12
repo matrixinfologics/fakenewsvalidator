@@ -11,7 +11,7 @@ class NewsCase extends Model
     const SECTION_REPLIES = 3;
     const SECTION_AUTHOR_PROFILE = 4;
     const SECTION_AUTHOR_LATEST_POSTS = 5;
-    const SECTION_POST_GEO_LOCATIONS = 6;
+    const SECTION_POST_GEO_LOCATION = 6;
     const SECTION_SIMILAR_POSTS = 7;
     const SECTION_SIMILAR_POSTS_SAME_AREA = 8;
     const SECTION_IMAGE_SEARCH = 9;

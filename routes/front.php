@@ -28,6 +28,8 @@ Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::get('/analysis/{case}', 'CasesController@postAnalysis')->name('analysis');
     Route::get('/author-posts/{case}', 'CasesController@authorPosts')->name('author-posts');
     Route::get('/post-location/{case}', 'CasesController@geoLocationMap')->name('post-location');
+    Route::get('/similar-posts/{case}', 'CasesController@similarPosts')->name('similar-posts');
+    Route::get('/samearea-posts/{case}', 'CasesController@sameAreaPosts')->name('samearea-posts');
 
     Route::get('/edit/{case}', 'CasesController@editCase')->name('editcase');
     Route::post('/edit/{case}', 'CasesController@updateCase')->name('editcase');

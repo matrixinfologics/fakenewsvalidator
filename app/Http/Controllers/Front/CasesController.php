@@ -267,14 +267,66 @@ class CasesController extends Controller
      */
     public function geoLocationMap($id)
     {
-        $sectionId = NewsCase::SECTION_AUTHOR_LATEST_POSTS;
-        $case = $this->case->findorFail($id);
+        try{
+            $sectionId = NewsCase::SECTION_POST_GEO_LOCATION;
+            $case = $this->case->findorFail($id);
 
-        $location = Mapper::location($case->location);
+            $location = Mapper::location($case->location);
 
-        Mapper::map($location->getLatitude(), $location->getLongitude());
+            Mapper::map($location->getLatitude(), $location->getLongitude());
 
-        return view('Front.sections.geolocation', ['case' => $case, 'sectionId' => $sectionId]);
+            return view('Front.sections.geolocation', ['case' => $case, 'sectionId' => $sectionId]);
+        } catch(\Exception $e){
+            return redirect('/')
+                            ->with('error', $e->getMessage())
+                            ->withInput();
+        }
+    }
+
+    /**
+     * Similar Posts
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function similarPosts($id)
+    {
+        try{
+            $sectionId = NewsCase::SECTION_SIMILAR_POSTS;
+            $case = $this->case->findorFail($id);
+
+            $this->setTwitterConfig();
+            $similarPosts = $this->twitterManager->getSimilarPosts($case);
+
+            return view('Front.sections.similarposts', ['case' => $case, 'sectionId' => $sectionId, 'similarPosts' => $similarPosts]);
+        } catch(\Exception $e){
+            return redirect('/')
+                            ->with('error', 'Invalid Tweet, Please try again.')
+                            ->withInput();
+        }
+    }
+
+    /**
+     * Posts from same area
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function sameAreaPosts($id)
+    {
+        try{
+            $sectionId = NewsCase::SECTION_SIMILAR_POSTS_SAME_AREA;
+            $case = $this->case->findorFail($id);
+
+            $this->setTwitterConfig();
+            $sameAreaPosts = $this->twitterManager->getSameAreaPosts($case);
+
+            return view('Front.sections.sameareaposts', ['case' => $case, 'sectionId' => $sectionId, 'sameAreaPosts' => $sameAreaPosts]);
+        } catch(\Exception $e){
+            return redirect('/')
+                            ->with('error', 'Invalid Tweet, Please try again.')
+                            ->withInput();
+        }
     }
 
 
