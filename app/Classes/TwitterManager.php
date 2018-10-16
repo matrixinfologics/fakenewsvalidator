@@ -79,8 +79,7 @@ class TwitterManager
             $tweets = Twitter::getUserTimeline(['screen_name' => $author, 'count' => 15, 'exclude_replies'=> true, 'include_rts' => false]);
 
             $authorPosts = [];
-
-            $i =1;
+            $i = 0;
             foreach ($tweets as $key => $tweet) {
 
                 if($i == 5)
@@ -111,7 +110,7 @@ class TwitterManager
 
             $similarPosts = [];
 
-            $i =1;
+            $i = 0;
             foreach ($tweets->statuses as $key => $tweet) {
 
                 if($i == 5)
@@ -138,11 +137,11 @@ class TwitterManager
      */
     public function getSameAreaPosts($case){
         try{
-            $tweets = Twitter::getSearch(['q' => $case->location, 'count' => 20, 'max_id' => $case->tweet_id]);
+            $place = Twitter::getGeoSearch(['query' => $case->location]);
+            $tweets = Twitter::getSearch(['q' => 'place:'.$place->result->places[0]->id, 'count' => 20, 'max_id' => $case->tweet_id]);
 
             $similarPosts = [];
-
-            $i =1;
+            $i = 0;
             foreach ($tweets->statuses as $key => $tweet) {
 
                 if($i == 5)

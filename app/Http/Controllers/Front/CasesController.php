@@ -13,6 +13,7 @@ use App\NewsCase;
 use App\Company;
 use App\CaseSectionResult;
 use App\Classes\TwitterManager;
+use App\Classes\TwitterUser;
 
 class CasesController extends Controller
 {
@@ -144,11 +145,12 @@ class CasesController extends Controller
                         ->withInput();
         }
 
+        $location = !empty($tweet->user->location)? $tweet->user->location: $tweet->place->full_name;
         $this->case->title = $request->get('title');
         $this->case->url = rtrim($request->get('url'),"/");
         $this->case->keywords = $request->get('keywords');
         $this->case->tweet_id = $tweet->id;
-        $this->case->location = $tweet->user->location;
+        $this->case->location = $location;
         $this->case->tweet_author = $tweet->user->screen_name;
 
         // Assign user to case
@@ -253,7 +255,7 @@ class CasesController extends Controller
 
             return view('Front.sections.authorposts', ['case' => $case, 'sectionId' => $sectionId, 'authorPosts' => $authorPosts]);
         } catch(\Exception $e){
-            return redirect('/')
+            return redirect()->back()
                             ->with('error', 'Invalid Tweet, Please try again.')
                             ->withInput();
         }
@@ -277,7 +279,7 @@ class CasesController extends Controller
 
             return view('Front.sections.geolocation', ['case' => $case, 'sectionId' => $sectionId]);
         } catch(\Exception $e){
-            return redirect('/')
+            return redirect()->back()
                             ->with('error', $e->getMessage())
                             ->withInput();
         }
@@ -295,12 +297,13 @@ class CasesController extends Controller
             $sectionId = NewsCase::SECTION_SIMILAR_POSTS;
             $case = $this->case->findorFail($id);
 
+
             $this->setTwitterConfig();
             $similarPosts = $this->twitterManager->getSimilarPosts($case);
 
             return view('Front.sections.similarposts', ['case' => $case, 'sectionId' => $sectionId, 'similarPosts' => $similarPosts]);
         } catch(\Exception $e){
-            return redirect('/')
+            return redirect()->back()
                             ->with('error', 'Invalid Tweet, Please try again.')
                             ->withInput();
         }
@@ -323,12 +326,31 @@ class CasesController extends Controller
 
             return view('Front.sections.sameareaposts', ['case' => $case, 'sectionId' => $sectionId, 'sameAreaPosts' => $sameAreaPosts]);
         } catch(\Exception $e){
-            return redirect('/')
+            return redirect()->back()
                             ->with('error', 'Invalid Tweet, Please try again.')
                             ->withInput();
         }
     }
 
+    /**
+     * Author Profile
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function authorProfile($id)
+    {
 
+        $case = $this->case->findorFail($id);
+        $screen_name = 'sahil58339131';
+
+        $config = $this->company->getCompanyTwitterDetails();
+        $twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
+        $stats = $twitter_user->getUserStatistics();
+        echo "<pre>";
+        print_r($stats);
+        die;
+
+    }
 
 }

@@ -8,8 +8,8 @@
         <li class="{{ Route::currentRouteName() == 'caseinfo'?'active':'' }}">
             <a href="{{ route('caseinfo', $case) }}" >Info</a>
         </li>
-        <li>
-            <a href="#">Post Analysis</a>
+        <li class="{{ Route::currentRouteName() == 'analysis'?'active':'' }}">
+            <a href="{{ route('analysis', $case) }}" >Post Analysis</a>
         </li>
         <li>
             <a href="#">Replies</a>
@@ -17,17 +17,17 @@
         <li>
             <a href="#">Author Profile</a>
         </li>
-        <li>
-            <a href="#">Author Latest Post</a>
+        <li class="{{ Route::currentRouteName() == 'author-posts'?'active':'' }}">
+            <a href="{{ route('author-posts', $case) }}" >Author Latest Post</a>
         </li>
-        <li>
-            <a href="#">Post Geo Location</a>
+        <li class="{{ Route::currentRouteName() == 'post-location'?'active':'' }}">
+            <a href="{{ route('post-location', $case) }}" >Post Geo Location</a>
         </li>
-        <li>
-            <a href="#">Similar Posts</a>
+        <li class="{{ Route::currentRouteName() == 'similar-posts'?'active':'' }}">
+            <a href="{{ route('similar-posts', $case) }}" >Similar Posts</a>
         </li>
-        <li>
-            <a href="#">Similar Posts From Same Area</a>
+        <li class="{{ Route::currentRouteName() == 'samearea-posts'?'active':'' }}">
+            <a href="{{ route('samearea-posts', $case) }}" >Similar Posts From Same Area</a>
         </li>
         <li>
             <a href="#">Image Search Verification</a>
