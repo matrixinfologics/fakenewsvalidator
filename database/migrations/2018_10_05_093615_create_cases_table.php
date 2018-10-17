@@ -17,9 +17,10 @@ class CreateCasesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('url');
-            $table->string('tweet_id');
             $table->mediumText('keywords');
-            $table->string('location');
+            $table->string('tweet_id');
+            $table->string('location')->nullable();
+            $table->string('tweet_author')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')
                 ->references('id')
