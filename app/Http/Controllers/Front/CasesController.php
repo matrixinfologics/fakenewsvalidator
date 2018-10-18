@@ -340,13 +340,16 @@ class CasesController extends Controller
      */
     public function authorProfile($id)
     {
-
+        $sectionId = NewsCase::SECTION_AUTHOR_PROFILE;
         $case = $this->case->findorFail($id);
         $screen_name = 'sahil58339131';
 
         $config = $this->company->getCompanyTwitterDetails();
-        $twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
-        $stats = $twitter_user->getUserStatistics();
+        //$twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
+       //$stats = $twitter_user->getUserStatistics();
+
+         return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId]);
+
         echo "<pre>";
         print_r($stats);
         die;

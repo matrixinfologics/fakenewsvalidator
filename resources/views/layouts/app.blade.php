@@ -12,7 +12,7 @@ $withoutSidebar = isset($withoutSidebar)??false;
 
     <title>@yield('title') | {{ config('app.name', 'Laravel') }}</title>
     <!-- Scripts -->
-    <script src="{{ asset('js/front.js') }}" defer></script>
+    <script src="{{ asset('js/front.js') }}"></script>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
