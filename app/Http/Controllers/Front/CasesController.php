@@ -9,6 +9,7 @@ use App\Http\Requests\Front\UpdateCase;
 use App\Http\Controllers\Controller;
 use Auth;
 use Mapper;
+use Cache;
 use App\NewsCase;
 use App\Company;
 use App\CaseSectionResult;
@@ -27,6 +28,8 @@ class CasesController extends Controller
     private $twitterManager;
 
     private $pagination = 10;
+    /** Cache Expirty time */
+    private $cacheExpiryTime;
     /**
      * Create a new controller instance.
      *
@@ -41,6 +44,7 @@ class CasesController extends Controller
        $this->case = $case;
        $this->company = $company;
        $this->twitterManager = $twitterManager;
+       $this->cacheExpiryTime = now()->addMinutes(30);
     }
 
     /**
@@ -153,6 +157,12 @@ class CasesController extends Controller
         $this->case->location = $location;
         $this->case->tweet_author = $tweet->user->screen_name;
 
+        if( !empty($tweet->place)) {
+            $geo = $this->twitterManager->getGeo($tweet->place->id);
+            $this->case->latitude = $geo['latitude'];
+            $this->case->longitude = $geo['longitude'];
+        }
+
         // Assign user to case
         $this->case->user()->associate(Auth::user());
 
@@ -179,7 +189,7 @@ class CasesController extends Controller
             return view('Front.sections.info', ['case' => $case, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
             return redirect('/')
-                            ->with('error', 'Something went wrong! Please try again.')
+                            ->with('error', $e->getMessage())
                             ->withInput();
         }
     }
@@ -273,9 +283,7 @@ class CasesController extends Controller
             $sectionId = NewsCase::SECTION_POST_GEO_LOCATION;
             $case = $this->case->findorFail($id);
 
-            $location = Mapper::location($case->location);
-
-            Mapper::map($location->getLatitude(), $location->getLongitude());
+            Mapper::map($case->latitude, $case->longitude);
 
             return view('Front.sections.geolocation', ['case' => $case, 'sectionId' => $sectionId]);
         } catch(\Exception $e){
@@ -342,18 +350,17 @@ class CasesController extends Controller
     {
         $sectionId = NewsCase::SECTION_AUTHOR_PROFILE;
         $case = $this->case->findorFail($id);
-        $screen_name = 'sahil58339131';
+        $screen_name = $case->tweet_author;
 
         $config = $this->company->getCompanyTwitterDetails();
-        //$twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
-       //$stats = $twitter_user->getUserStatistics();
+        $twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
 
-         return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId]);
-
-        echo "<pre>";
-        print_r($stats);
-        die;
-
+        if(!Cache::has("stats_{{$id}}")) {
+            Cache::put("stats_{{$id}}", $twitter_user->getUserStatistics(), $this->cacheExpiryTime);
+        }
+        $stats = Cache::get("stats_{{$id}}");
+        
+        return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId, 'stats' => $stats]);
     }
 
 }

@@ -399,24 +399,21 @@ class TwitterUser{
     function getUserStatistics(){
 
         $tmp_users_in_timeline = array();
-
         $user_stats             =  new \stdClass();
-
         $user_stats->user       = $this->getUserInfo($this->user->screen_name);
-
         $user_stats->followers  = $this->getFollowers($this->user->screen_name);
-
         $user_stats->friends    = $this->getFriends($this->user->screen_name);
-
         $user_stats->statuses_count = $user_stats->user->statuses_count;
         $user_stats->total_tweets = 0;
         $user_stats->total_links = 0;
         $user_stats->total_replies = 0;
         $user_stats->total_user_mentions = 0;
         $user_stats->total_retweets = 0;
-
-
-
+        $user_stats->total_hashtags = 0;
+        $user_stats->most_retweeted = [];
+        $user_stats->most_favorited = [];
+        $user_stats->hashtags = [];
+        $user_stats->symbols = [];
 
         $all_timeline = $this->getUserTweets($this->user->screen_name);
 
@@ -628,7 +625,6 @@ class TwitterUser{
 
         $user_stats->users_in_timeline = $this->get_all_users_in_timeline($tmp_users_in_timeline);
 
- return $user_stats;
 
         ksort($user_stats->tweets_on_hours);
 
@@ -654,8 +650,7 @@ class TwitterUser{
 
         arsort($user_stats->most_favorited);
 
-
-
+        return $user_stats;
 
 
     }

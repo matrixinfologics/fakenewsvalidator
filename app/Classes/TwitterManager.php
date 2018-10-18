@@ -160,4 +160,14 @@ class TwitterManager
         }
     }
 
+
+    public function getGeo($place){
+        $place = Twitter::getGeo($place);
+
+        $coordinates['latitude'] = $place->contained_within[0]->centroid[1];
+        $coordinates['longitude'] = $place->contained_within[0]->centroid[0];
+
+        return $coordinates;
+    }
+
 }
