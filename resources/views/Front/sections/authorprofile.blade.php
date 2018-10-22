@@ -92,7 +92,7 @@ for($i = 0; $i < 24; $i++){
                     <div class="col-md-4">
                         <ul class="main-list-ul">
                         <li class="main-analytics"><span>{{ $stats->total_tweets }}</span> Tweets Since {{ date("d.m.Y",$stats->first_tweet_time) }}</li>
-                        <li><span>{{ $stats->average_tweets_per_day }}</span>  Tweets Per Day</li>
+                        <li><span>{{ round($stats->average_tweets_per_day) }}</span>  Tweets Per Day</li>
                         <li><span>{{ $stats->total_retweets }}</span>  Retweets</li>
                         <li><span>{{ $stats->total_user_mentions }}</span>  User Mentions</li>
                         <li><span>{{ $stats->total_replies }}</span>  Replies</li>
@@ -190,17 +190,25 @@ for($i = 0; $i < 24; $i++){
                     <div class="col-md-6">
                         <h3 class="info-head">TWEETS MOST RETWEETED</h3>
                         <ul class="main-list-ul most-reply most-hashtag">
-                            @foreach($stats->most_retweeted as $user => $count)
-                                <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
-                            @endforeach
+                            @if(!empty($stats->most_retweeted))
+                                @foreach($stats->most_retweeted as $user => $count)
+                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                @endforeach
+                            @else
+                                 <li>No record found</li>
+                            @endif
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <h3 class="info-head">TWEETS MOST FAVORITED</h3>
                         <ul class="main-list-ul most-reply most-hashtag">
-                            @foreach($stats->most_favorited as $user => $count)
-                                <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
-                            @endforeach
+                            @if(!empty($stats->most_retweeted))
+                                @foreach($stats->most_favorited as $user => $count)
+                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                @endforeach
+                            @else
+                                 <li>No record found</li>
+                            @endif
                         </ul>
                     </div>
                 </div>
