@@ -28,5 +28,6 @@ Route::group(['middleware' => ['admin']], function () {
     // Settings
     Route::get('/settings', 'SettingController@index')->name('settings');
     Route::post('/settings', 'SettingController@store')->name('settings.store');
+    Route::get('/clear-cache', 'SettingController@clearCache')->name('clearcache');
 
 });
