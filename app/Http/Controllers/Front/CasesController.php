@@ -190,9 +190,14 @@ class CasesController extends Controller
             $latitude = $geo['latitude'];
             $longitude = $geo['longitude'];
         } else if($location != ''){
-            $geo = Mapper::location($location);
-            $latitude = $geo->getLatitude();
-            $longitude = $geo->getLongitude();
+            try{
+                $geo = Mapper::location($location);
+                $latitude = $geo->getLatitude();
+                $longitude = $geo->getLongitude();
+            } catch(\Exception $e){
+                $latitude = null;
+                $longitude = null;
+            }
         }
 
         $this->case->latitude = $latitude;
