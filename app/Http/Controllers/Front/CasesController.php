@@ -182,11 +182,21 @@ class CasesController extends Controller
         $this->case->location = $location;
         $this->case->tweet_author = $tweet->user->screen_name;
 
+        $latitude = null;
+        $longitude = null;
+
         if( !empty($tweet->place)) {
             $geo = $this->twitterManager->getGeo($tweet->place->id);
-            $this->case->latitude = $geo['latitude'];
-            $this->case->longitude = $geo['longitude'];
+            $latitude = $geo['latitude'];
+            $longitude = $geo['longitude'];
+        } else if($location != ''){
+            $geo = Mapper::location($location);
+            $latitude = $geo->getLatitude();
+            $longitude = $geo->getLongitude();
         }
+
+        $this->case->latitude = $latitude;
+        $this->case->longitude = $longitude;
 
         // Assign user to case
         $this->case->user()->associate(Auth::user());
@@ -309,6 +319,12 @@ class CasesController extends Controller
         try{
             $sectionId = NewsCase::SECTION_POST_GEO_LOCATION;
             $case = $this->case->findorFail($id);
+
+            if($case->latitude == null || $case->longitude == null) {
+                return redirect()->back()
+                            ->with('error', 'Location is not correct of this case')
+                            ->withInput();
+            }
 
             Mapper::map($case->latitude, $case->longitude);
 
