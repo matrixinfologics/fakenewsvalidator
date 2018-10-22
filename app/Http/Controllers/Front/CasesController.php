@@ -168,7 +168,13 @@ class CasesController extends Controller
                         ->withInput();
         }
 
-        $location = !empty($tweet->user->location)? $tweet->user->location: !empty($tweet->place)?$tweet->place->full_name:'';
+        $location = '';
+        if($tweet->user->location != '') {
+            $location = $tweet->user->location;
+        } else {
+            $location = isset($tweet->place->full_name) && $tweet->place->full_name != '' ? $tweet->place->full_name : '';
+        }
+
         $this->case->title = $request->get('title');
         $this->case->url = rtrim($request->get('url'),"/");
         $this->case->keywords = $request->get('keywords');
