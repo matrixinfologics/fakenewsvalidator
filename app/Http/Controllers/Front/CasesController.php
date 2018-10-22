@@ -15,6 +15,7 @@ use App\Company;
 use App\CaseSectionResult;
 use App\Classes\TwitterManager;
 use App\Classes\TwitterUser;
+use Illuminate\Database\Eloquent\Collection;
 
 class CasesController extends Controller
 {
@@ -28,8 +29,10 @@ class CasesController extends Controller
     private $twitterManager;
 
     private $pagination = 10;
+
     /** Cache Expirty time */
     private $cacheExpiryTime;
+
     /**
      * Create a new controller instance.
      *
@@ -44,7 +47,7 @@ class CasesController extends Controller
        $this->case = $case;
        $this->company = $company;
        $this->twitterManager = $twitterManager;
-       $this->cacheExpiryTime = now()->addMinutes(30);
+       $this->cacheExpiryTime = now()->addMinutes(60);
     }
 
     /**
@@ -55,6 +58,22 @@ class CasesController extends Controller
     public function setTwitterConfig(){
         $config = $this->company->getCompanyTwitterDetails();
         $this->twitterManager->setConfig($config);
+    }
+
+    /**
+     * Get data from cache
+     *
+     * @param $key
+     * @param string|array|Collection $data
+     *
+     * @return string|array|Collection
+     */
+    public function getCache($key, $data){
+        if(!Cache::has($key)) {
+            Cache::put($key, $data, $this->cacheExpiryTime);
+        }
+
+        return Cache::get($key);
     }
 
     /**
@@ -149,7 +168,7 @@ class CasesController extends Controller
                         ->withInput();
         }
 
-        $location = !empty($tweet->user->location)? $tweet->user->location: $tweet->place->full_name;
+        $location = !empty($tweet->user->location)? $tweet->user->location: !empty($tweet->place)?$tweet->place->full_name:'';
         $this->case->title = $request->get('title');
         $this->case->url = rtrim($request->get('url'),"/");
         $this->case->keywords = $request->get('keywords');
@@ -184,7 +203,8 @@ class CasesController extends Controller
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $tweetPreview = $this->twitterManager->getTweetPreview($case->url);
+
+            $tweetPreview = $this->getCache("info_{$id}", $this->twitterManager->getTweetPreview($case->url));
 
             return view('Front.sections.info', ['case' => $case, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
@@ -237,7 +257,7 @@ class CasesController extends Controller
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $tweetPreview = $this->twitterManager->getTweetPreview($case->url);
+            $tweetPreview = $this->getCache("analysis_{$id}", $this->twitterManager->getTweetPreview($case->url));
 
             return view('Front.sections.analysis', ['case' => $case, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
@@ -261,7 +281,8 @@ class CasesController extends Controller
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $authorPosts = $this->twitterManager->getAuthorPosts($case->tweet_author);
+
+            $authorPosts = $this->getCache("author_posts_{$id}", $this->twitterManager->getAuthorPosts($case->tweet_author));
 
             return view('Front.sections.authorposts', ['case' => $case, 'sectionId' => $sectionId, 'authorPosts' => $authorPosts]);
         } catch(\Exception $e){
@@ -305,9 +326,8 @@ class CasesController extends Controller
             $sectionId = NewsCase::SECTION_SIMILAR_POSTS;
             $case = $this->case->findorFail($id);
 
-
             $this->setTwitterConfig();
-            $similarPosts = $this->twitterManager->getSimilarPosts($case);
+            $similarPosts = $this->getCache("similar_posts_{$id}", $this->twitterManager->getSimilarPosts($case));
 
             return view('Front.sections.similarposts', ['case' => $case, 'sectionId' => $sectionId, 'similarPosts' => $similarPosts]);
         } catch(\Exception $e){
@@ -330,7 +350,7 @@ class CasesController extends Controller
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $sameAreaPosts = $this->twitterManager->getSameAreaPosts($case);
+            $sameAreaPosts = $this->getCache("samearea_posts_{$id}", $this->twitterManager->getSameAreaPosts($case));
 
             return view('Front.sections.sameareaposts', ['case' => $case, 'sectionId' => $sectionId, 'sameAreaPosts' => $sameAreaPosts]);
         } catch(\Exception $e){
@@ -355,11 +375,8 @@ class CasesController extends Controller
         $config = $this->company->getCompanyTwitterDetails();
         $twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
 
-        if(!Cache::has("stats_{{$id}}")) {
-            Cache::put("stats_{{$id}}", $twitter_user->getUserStatistics(), $this->cacheExpiryTime);
-        }
-        $stats = Cache::get("stats_{{$id}}");
-        
+        $stats = $this->getCache("stats_{{$id}}", $twitter_user->getUserStatistics());
+
         return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId, 'stats' => $stats]);
     }
 

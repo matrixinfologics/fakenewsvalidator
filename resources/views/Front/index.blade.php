@@ -6,7 +6,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-sm-12">
-                    <div class="case-search-bar col-md-12 col-sm-8 col-xs-11">
+                    <div class="case-search-bar col-md-12">
                         <div class="row">
                             {{ Form::open(['method' => 'GET', 'url'=> route('cases')]) }}
                                 {{ Form::text('s', request()->has('s')? request()->get('s'):null, ['placeholder' => 'Search']) }}

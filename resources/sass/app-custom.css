@@ -65,10 +65,7 @@ form {
 input.btn.btn-primary {
     color: #3d4958 !important;
 }
-.btn-primary:hover{
-transform: scale(1.2);
-transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
-}
+
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
     background-color: #fff !important;
     position: relative;
@@ -617,7 +614,7 @@ img.user-prof {
 .main-list-ul li {
     border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
-}   
+}
 li.main-analytics {
     font-weight: 900;
 }
@@ -628,10 +625,10 @@ li.main-analytics {
     width: auto !important;
     display: inline-block;
     padding-right: 10px;
-    margin: 0 0 0px 0 !important; 
+    margin: 0 0 0px 0 !important;
 }
 .most-reply span {
-    background: transparent !important; 
+    background: transparent !important;
     color: #000 !important;
     padding: 0 0 0 0 !important;
     font-weight: normal !important;
@@ -683,7 +680,7 @@ background: transparent !important;
 .bottom-button p {
     display: inline-block;
     color: #000;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 500;
 }
 .bottom-button {
@@ -725,6 +722,39 @@ span.mention {
 .info-head {
     padding: 10px !important;
 }
+
+/*22-10-2018*/
+.inner-info-content .user-profile-main li {
+    padding: 0px 4px 0 11px !important;
+    border-right: 1px solid #fff !important;
+}
+ul.main-list-ul.most-reply {
+    height: 25em;
+    line-height: 2em;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.content-fake{
+    display: inline-block;
+}
+.content-fake-button{float: right;}
+.flag_button form{width: 100% !important;}
+.inner-info-content.flag_button {
+    padding: 30px 10px 70px 0px;
+}
+.case-search-bar button {
+    background: #3d4958;
+    color: #fff;
+    border: none;
+    padding: 7px 10px 11px 10px !important;
+    cursor: pointer;
+    position: relative;
+    right: 5px;
+}
+.cases form{width: 100% !important;}
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
@@ -746,7 +776,22 @@ img.icon {
 .inner-info-content img {
     margin-bottom: 20px;
 }
-
+.most-reply img {
+    width: 70% !important;
+    margin: 0 0 0 20px !important;
+}
+span.mention {
+    padding:6px !important;
+    float: none !important;
+}
+.main-list-ul span {
+    padding: 12px !important;
+        font-size: 14px;
+}
+.analytics .main-list-ul span {
+    padding: 7px !important;
+}
+.cases form{width: 100%;}
 }
 @media (max-width: 991px) {
     .inner-info-content img {
@@ -754,6 +799,7 @@ img.icon {
     }
     form {width: 80%;}
 .form-main {width: 80%;}
+.cases form{width:100% !important;}
 .ml-auto {
     margin-left: auto!important;
     text-align: left;
@@ -777,6 +823,10 @@ img.twitter-user-statistics {
 }
 img.user-prof {
     width: auto !important;
+}
+.analytics ul.main-list-ul li {
+    font-size: 12px;
+    padding: 3px 0 11px 0px;
 }
 }
 @media (max-width: 768px) {
@@ -822,10 +872,13 @@ img.twitter-user-statistics {
 img.user-prof {
     width: auto !important;
 }
+.most-reply img {
+    width: auto !important;
+}
 }
 @media (max-width: 767px) {
 .case-search-bar input {
-    padding: 9px 32px 9px 10px;
+    padding: 9px 2px 9px 2px;
 }
 form {width: 100%;}
 .form-main {width: 100%;}
@@ -859,6 +912,12 @@ img.twitter-user-statistics {
 img.user-prof {
     width: auto !important;
 }
+.most-reply img {
+    width: auto !important;
+}
+.inner-info-content h3 {
+    margin-top: 14px !important;
+}
 }
 @media (max-width: 480px) {
 .search-case td {
@@ -881,7 +940,15 @@ img.user-prof {
     width: auto !important;
 }
 }
+@media (max-width: 379px) {
+.case-search-bar button {
+    padding: 7px 8px 11px 8px !important;
+}
+}
 @media (max-width: 375px) {
+    .case-search-bar button {
+    padding: 2px 8px 8px 8px !important;
+}
 .table thead th {
     font-size: 10px;
 }

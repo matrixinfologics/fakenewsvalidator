@@ -18,7 +18,7 @@ for ( $i = $startTime; $i <= $endTime; $i = $i + 86400 ) {
     $loop_date = date( 'Y-m-d', $i ); // 2010-05-01, 2010-05-02, etc
     if(isset($stats->tweets_on_days[$loop_date])){
         $tweetHistoryData[] = $stats->tweets_on_days[$loop_date];
-    }else{  
+    }else{
         $tweetHistoryData[] = 0;
     }
 }
@@ -84,11 +84,11 @@ for($i = 0; $i < 24; $i++){
                     </ul>
                 </div>
             </div>
-            
+
             <!--Preview---->
             <h3 class="info-head">TWEET ANALYTICS</h3>
-            <div class="inner-info-content analytics"> 
-                <div class="row"> 
+            <div class="inner-info-content analytics">
+                <div class="row">
                     <div class="col-md-4">
                         <ul class="main-list-ul">
                         <li class="main-analytics"><span>{{ $stats->total_tweets }}</span> Tweets Since {{ date("d.m.Y",$stats->first_tweet_time) }}</li>
@@ -107,79 +107,86 @@ for($i = 0; $i < 24; $i++){
                     </div>
                 </div>
             </div>
-            
+
             <!-- 3rd-post--->
-            <h3 class="info-head">USER MOST RETWEETED</h3>
-                <div class="inner-info-content analytics"> 
-                <div class="row"> 
-                    <div class="col-md-4">
-                        <ul class="main-list-ul most-reply">
-                            @foreach($stats->most_retweeted_users as $user => $count)
-                                <li><img src="{{ $stats->users_in_timeline[$user]->profile_image_url }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="col-md-8">
-                        <div id="users_most_retweeted_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 4th-post--->            
-            <h3 class="info-head">USER MOST REPLIED TO</h3>
-            <div class="inner-info-content analytics"> 
-                <div class="row"> 
-                    <div class="col-md-4">
-                        <ul class="main-list-ul most-reply">
-                            @foreach($stats->most_replied_to_users as $user => $count)
-                                <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="col-md-8">
-                        <div id="users_most_replied_to_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
+            @if(!empty($stats->most_retweeted_users))
+                <h3 class="info-head">USER MOST RETWEETED</h3>
+                <div class="inner-info-content analytics">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="main-list-ul most-reply">
+                                @foreach($stats->most_retweeted_users as $user => $count)
+                                    <li><img src="{{ $stats->users_in_timeline[$user]->profile_image_url }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="users_most_retweeted_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+            @endif
+
+            <!-- 4th-post--->
+            @if(!empty($stats->most_replied_to_users))
+                <h3 class="info-head">USER MOST REPLIED TO</h3>
+                <div class="inner-info-content analytics">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="main-list-ul most-reply">
+                                @foreach($stats->most_replied_to_users as $user => $count)
+                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="users_most_replied_to_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- 5th-post-->
-        
-            <h3 class="info-head">USER MOST MENTIONED</h3>
-            <div class="inner-info-content analytics"> 
-                <div class="row"> 
-                    <div class="col-md-4">
-                        <ul class="main-list-ul most-reply">
-                            @foreach($stats->user_mentions as $user => $count)
-                                <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="col-md-8">
-                        <div id="users_most_mentioned_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
-                    </div>
-                </div>
-            </div>
-        
-            <!--6th Post-->
-            <h3 class="info-head">HASHTAG MOST USED</h3>
-            <div class="inner-info-content analytics"> 
-                <div class="row"> 
-                    <div class="col-md-4">
-                        <ul class="main-list-ul most-reply most-hashtag">
-                            @foreach($stats->hashtags as $user => $count)
-                                <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="col-md-8">
-                        <div id="hashtags_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
+            @if(!empty($stats->user_mentions))
+                <h3 class="info-head">USER MOST MENTIONED</h3>
+                <div class="inner-info-content analytics">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="main-list-ul most-reply">
+                                @foreach($stats->user_mentions as $user => $count)
+                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="users_most_mentioned_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!--6th Post-->
-            <div class="inner-info-content analytics"> 
-                <div class="row"> 
+            @if(!empty($stats->hashtags))
+                <h3 class="info-head">HASHTAG MOST USED</h3>
+                <div class="inner-info-content analytics">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="main-list-ul most-reply most-hashtag">
+                                @foreach($stats->hashtags as $user => $count)
+                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="hashtags_chart" style="width:100%; min-width: 310px; height: 400px; margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <!--6th Post-->
+            <div class="inner-info-content analytics">
+                <div class="row">
                     <div class="col-md-6">
                         <h3 class="info-head">TWEETS MOST RETWEETED</h3>
                         <ul class="main-list-ul most-reply most-hashtag">
@@ -200,8 +207,8 @@ for($i = 0; $i < 24; $i++){
             </div>
 
             <!--6th Post-->
-            <div class="inner-info-content analytics"> 
-                <div class="row"> 
+            <div class="inner-info-content analytics">
+                <div class="row">
                     <div class="col-md-6">
                         <h3 class="info-head">DAYS OF WEEK</h3>
                         <div id="days_of_week_chart" style="width:100%; min-width: 310px; height: 500px; margin: 0 auto;"></div>
@@ -212,17 +219,21 @@ for($i = 0; $i < 24; $i++){
                     </div>
                 </div>
             </div>
-            
+
             <div class="bottom-button">
-                <p>Our engine suggests that this is a fake account</p>
-                {{ Form::open(['url'=> route('section-flag', [$sectionId, $case->id])]) }}
-                    {{ Form::hidden('flag', 'fake')}}
-                    {{ Form::button('FLAG FAKE', ['type' => 'submit', 'class' => 'btn btn-flag pull-right']) }}
-                {{ Form::close() }}
+                 <div class="col-md-6 content-fake">
+                   <p>Our engine suggests that this is a fake account</p>
+               </div>
+               <div class="col-md-6 content-fake-button">
+                    {{ Form::open(['url'=> route('section-flag', [$sectionId, $case->id])]) }}
+                        {{ Form::hidden('flag', 'fake')}}
+                        {{ Form::button('FLAG FAKE', ['type' => 'submit', 'class' => 'btn btn-flag pull-right']) }}
+                    {{ Form::close() }}
+                </div>
             </div>
         </div>
     </div>
-   
+
   <script>
     $(function(){
       let inst = new EnableHighCharts();

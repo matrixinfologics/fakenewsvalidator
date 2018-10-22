@@ -105,6 +105,9 @@ class EnableHighCharts {
 
     showDaysofWeekColumnChart(data){
         $('#days_of_week_chart').highcharts({
+            credits: {
+                  enabled: false
+            },
             chart: {
                 type: 'column',
                 margin: 75,
@@ -141,6 +144,9 @@ class EnableHighCharts {
 
     showHoursOfDayColumnChart(data){
         $('#hours_of_day_chart').highcharts({
+            credits: {
+                  enabled: false
+            },
             chart: {
                 type: 'column',
                 margin: 75,
