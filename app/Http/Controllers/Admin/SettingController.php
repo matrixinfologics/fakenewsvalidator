@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use App\Setting;
+use Cache;
 
 class SettingController extends Controller
 {
@@ -52,4 +53,18 @@ class SettingController extends Controller
         return redirect()->back()
             ->with('success','Settings saved successfully!');
     }
+
+    /**
+    * Clear Cache
+    *
+    * @return Response
+    */
+    public function clearCache()
+    {
+        Cache::flush();
+
+        return redirect()->back()
+            ->with('success','Cache has been Cleared!');
+    }
+
 }
