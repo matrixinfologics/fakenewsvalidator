@@ -20,8 +20,8 @@ class CreateCasesTable extends Migration
             $table->mediumText('keywords');
             $table->string('tweet_id');
             $table->string('location')->nullable();
-            $table->string('latitude', 500)->nullable()->after('location');
-            $table->string('longitude', 500)->nullable()->after('location');
+            $table->string('latitude', 500)->nullable();
+            $table->string('longitude', 500)->nullable();
             $table->string('tweet_author')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')
