@@ -19,6 +19,10 @@ class CreateCompaniesTable extends Migration
             $table->string('website')->nullable()->default(null);
             $table->string('phone', 50);
             $table->string('address', 500);
+            $table->string('twitter_consumer_key', 500)->nullable()->after('address');
+            $table->string('twitter_consumer_secret', 500)->nullable()->after('address');
+            $table->string('twitter_access_token', 500)->nullable()->after('address');
+            $table->string('twitter_access_token_secret', 500)->nullable()->after('address');
             $table->timestamps();
         });
     }

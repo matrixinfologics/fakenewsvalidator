@@ -14,8 +14,8 @@
         <li>
             <a href="#">Replies</a>
         </li>
-        <li>
-            <a href="#">Author Profile</a>
+        <li class="{{ Route::currentRouteName() == 'author-profile'?'active':'' }}">
+            <a href="{{ route('author-profile', $case) }}" >Author Profile</a>
         </li>
         <li class="{{ Route::currentRouteName() == 'author-posts'?'active':'' }}">
             <a href="{{ route('author-posts', $case) }}" >Author Latest Post</a>
