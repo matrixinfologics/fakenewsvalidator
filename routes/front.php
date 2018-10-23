@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::get('/similar-posts/{case}', 'CasesController@similarPosts')->name('similar-posts');
     Route::get('/samearea-posts/{case}', 'CasesController@sameAreaPosts')->name('samearea-posts');
     Route::get('/author-profile/{case}', 'CasesController@authorProfile')->name('author-profile');
+    Route::match(['get', 'post'], '/image-search/{case}', 'CasesController@imageSearch')->name('image-search');
 
     Route::get('/edit/{case}', 'CasesController@editCase')->name('editcase');
     Route::post('/edit/{case}', 'CasesController@updateCase')->name('editcase');

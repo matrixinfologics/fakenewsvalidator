@@ -12,9 +12,11 @@ use Mapper;
 use Cache;
 use App\NewsCase;
 use App\Company;
+use App\Setting;
 use App\CaseSectionResult;
 use App\Classes\TwitterManager;
 use App\Classes\TwitterUser;
+use App\Classes\TineyeApi;
 use Illuminate\Database\Eloquent\Collection;
 
 class CasesController extends Controller
@@ -24,6 +26,9 @@ class CasesController extends Controller
 
     /** @var Company */
     private $company;
+
+    /** @var Setting */
+    private $settings;
 
     /** @var TwitterManager */
     private $twitterManager;
@@ -40,13 +45,14 @@ class CasesController extends Controller
      * @param TwitterManager $twitterManager
      * @return void
      */
-    public function __construct(NewsCase $case, Company $company, TwitterManager $twitterManager)
+    public function __construct(NewsCase $case, Company $company, TwitterManager $twitterManager, Setting $settings)
     {
        $this->middleware('auth:front');
 
        $this->case = $case;
        $this->company = $company;
        $this->twitterManager = $twitterManager;
+       $this->settings = $settings;
        $this->cacheExpiryTime = now()->addMinutes(60);
     }
 
@@ -421,6 +427,39 @@ class CasesController extends Controller
         $stats = Cache::get($cacheKey);
 
         return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId, 'stats' => $stats]);
+    }
+
+    /**
+     * Image Search
+     *
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     */
+    public function imageSearch(Request $request, $id)
+    {
+        $sectionId = NewsCase::SECTION_IMAGE_SEARCH;
+        $case = $this->case->findorFail($id);
+        $data = '';
+
+        if ($request->isMethod('post')) {
+            $image = $request->file('image');
+            $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
+            $destinationPath = storage_path();
+            $image->move($destinationPath, $input['imagename']);
+            $imageFilepath = $destinationPath.'/'.$input['imagename'];
+            $imageData = file_get_contents($imageFilepath);
+
+            $tineyeApi = new TineyeApi(
+                                $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PRIVATE_KEY),
+                                $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PUBLIC_KEY)
+                            );
+            $data = $tineyeApi->searchImage($imageData, $input['imagename']);
+
+            unlink($imageFilepath); // Deleting image from server
+        }
+
+        return view('Front.sections.imagesearch', ['case' => $case, 'sectionId' => $sectionId, 'data' => $data]);
     }
 
 }
