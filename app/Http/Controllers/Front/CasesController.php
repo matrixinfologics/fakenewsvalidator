@@ -61,22 +61,6 @@ class CasesController extends Controller
     }
 
     /**
-     * Get data from cache
-     *
-     * @param $key
-     * @param string|array|Collection $data
-     *
-     * @return string|array|Collection
-     */
-    public function getCache($key, $data){
-        if(!Cache::has($key)) {
-            Cache::put($key, $data, $this->cacheExpiryTime);
-        }
-
-        return Cache::get($key);
-    }
-
-    /**
      * Set Twitter config details
      *
      * @param int $tweetId
@@ -221,11 +205,16 @@ class CasesController extends Controller
     public function caseInfo($id)
     {
         try{
+            $cacheKey = "info_{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
 
-            $tweetPreview = $this->getCache("info_{$id}", $this->twitterManager->getTweetPreview($case->url));
+            if(!Cache::has($cacheKey)) {
+                Cache::put($cacheKey, $this->twitterManager->getTweetPreview($case->url), $this->cacheExpiryTime);
+            }
+
+            $tweetPreview = Cache::get($cacheKey);
 
             return view('Front.sections.info', ['case' => $case, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
@@ -275,10 +264,15 @@ class CasesController extends Controller
     public function postAnalysis($id)
     {
         try{
+            $cacheKey = "analysis_{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $tweetPreview = $this->getCache("analysis_{$id}", $this->twitterManager->getTweetPreview($case->url));
+            if(!Cache::has($cacheKey)) {
+                Cache::put($cacheKey, $this->twitterManager->getTweetPreview($case->url), $this->cacheExpiryTime);
+            }
+
+            $tweetPreview = Cache::get($cacheKey);
 
             return view('Front.sections.analysis', ['case' => $case, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
@@ -298,12 +292,17 @@ class CasesController extends Controller
     public function authorPosts($id)
     {
         try{
+            $cacheKey = "author_posts_{$id}";
             $sectionId = NewsCase::SECTION_AUTHOR_LATEST_POSTS;
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
 
-            $authorPosts = $this->getCache("author_posts_{$id}", $this->twitterManager->getAuthorPosts($case->tweet_author));
+            if(!Cache::has($cacheKey)) {
+                Cache::put($cacheKey, $this->twitterManager->getAuthorPosts($case->tweet_author), $this->cacheExpiryTime);
+            }
+
+            $authorPosts = Cache::get($cacheKey);
 
             return view('Front.sections.authorposts', ['case' => $case, 'sectionId' => $sectionId, 'authorPosts' => $authorPosts]);
         } catch(\Exception $e){
@@ -350,11 +349,17 @@ class CasesController extends Controller
     public function similarPosts($id)
     {
         try{
+            $cacheKey = "similar_posts_{$id}";
             $sectionId = NewsCase::SECTION_SIMILAR_POSTS;
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $similarPosts = $this->getCache("similar_posts_{$id}", $this->twitterManager->getSimilarPosts($case));
+
+            if(!Cache::has($cacheKey)) {
+                Cache::put($cacheKey, $this->twitterManager->getSimilarPosts($case), $this->cacheExpiryTime);
+            }
+
+            $similarPosts = Cache::get($cacheKey);
 
             return view('Front.sections.similarposts', ['case' => $case, 'sectionId' => $sectionId, 'similarPosts' => $similarPosts]);
         } catch(\Exception $e){
@@ -373,11 +378,17 @@ class CasesController extends Controller
     public function sameAreaPosts($id)
     {
         try{
+            $cacheKey = "samearea_posts_{$id}";
             $sectionId = NewsCase::SECTION_SIMILAR_POSTS_SAME_AREA;
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
-            $sameAreaPosts = $this->getCache("samearea_posts_{$id}", $this->twitterManager->getSameAreaPosts($case));
+
+            if(!Cache::has($cacheKey)) {
+                Cache::put($cacheKey, $this->twitterManager->getSameAreaPosts($case), $this->cacheExpiryTime);
+            }
+
+            $sameAreaPosts = Cache::get($cacheKey);
 
             return view('Front.sections.sameareaposts', ['case' => $case, 'sectionId' => $sectionId, 'sameAreaPosts' => $sameAreaPosts]);
         } catch(\Exception $e){
@@ -395,6 +406,7 @@ class CasesController extends Controller
      */
     public function authorProfile($id)
     {
+        $cacheKey = "stats_{{$id}}";
         $sectionId = NewsCase::SECTION_AUTHOR_PROFILE;
         $case = $this->case->findorFail($id);
         $screen_name = $case->tweet_author;
@@ -402,7 +414,11 @@ class CasesController extends Controller
         $config = $this->company->getCompanyTwitterDetails();
         $twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
 
-        $stats = $this->getCache("stats_{{$id}}", $twitter_user->getUserStatistics());
+        if(!Cache::has($cacheKey)) {
+            Cache::put($cacheKey, $twitter_user->getUserStatistics(), $this->cacheExpiryTime);
+        }
+
+        $stats = Cache::get($cacheKey);
 
         return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId, 'stats' => $stats]);
     }
