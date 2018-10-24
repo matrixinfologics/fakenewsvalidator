@@ -42,7 +42,9 @@ class CasesController extends Controller
      * Create a new controller instance.
      *
      * @param Case $case
+     * @param Company $company
      * @param TwitterManager $twitterManager
+     * @param Setting $settings
      * @return void
      */
     public function __construct(NewsCase $case, Company $company, TwitterManager $twitterManager, Setting $settings)
@@ -461,5 +463,22 @@ class CasesController extends Controller
 
         return view('Front.sections.imagesearch', ['case' => $case, 'sectionId' => $sectionId, 'data' => $data]);
     }
+
+    /**
+     * Source Cross Check
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function sourceCrossCheck($id)
+    {
+        $sectionId = NewsCase::SECTION_SOURCE_CROSSS_CHECKING;
+        $case = $this->case->findorFail($id);
+
+        $fakeCount = $case->results()->where('flag', NewsCase::FLAG_FAKE)->count();
+
+        return view('Front.sections.source-cross', ['case' => $case, 'sectionId' => $sectionId, 'fakeCount' => $fakeCount]);
+    }
+
 
 }

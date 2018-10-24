@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsCase extends Model
 {
+    const FLAG_FAKE = 'fake';
+    const FLAG_TRUSTED = 'trusted';
+
     const SECTION_INFO = 1;
     const SECTION_POST_ANALYSIS = 2;
     const SECTION_REPLIES = 3;
@@ -31,6 +34,22 @@ class NewsCase extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+    * Get users of company.
+    */
+    public function discussions()
+    {
+        return $this->hasMany('App\Discussion', 'case_id');
+    }
+
+    /**
+    * Get users of company.
+    */
+    public function results()
+    {
+        return $this->hasMany('App\CaseResult', 'case_id');
     }
 
 }
