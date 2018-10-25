@@ -229,15 +229,7 @@ for($i = 0; $i < 24; $i++){
             </div>
 
             <div class="bottom-button">
-                 <div class="col-md-6 content-fake">
-                   <p>Our engine suggests that this is a fake account</p>
-               </div>
-               <div class="col-md-6 content-fake-button">
-                    {{ Form::open(['url'=> route('section-flag', [$sectionId, $case->id])]) }}
-                        {{ Form::hidden('flag', 'fake')}}
-                        {{ Form::button('FLAG FAKE', ['type' => 'submit', 'class' => 'btn btn-flag pull-right']) }}
-                    {{ Form::close() }}
-                </div>
+               @include('layouts.app-partials.flag-buttons')
             </div>
         </div>
     </div>

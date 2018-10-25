@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCaseResultTable extends Migration
+class CreateCaseResultsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCaseResultTable extends Migration
      */
     public function up()
     {
-        Schema::create('case_result', function (Blueprint $table) {
+        Schema::create('case_results', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('case_id');
             $table->unsignedInteger('user_id')->nullable();
@@ -38,6 +38,6 @@ class CreateCaseResultTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('case_result');
+        Schema::dropIfExists('case_results');
     }
 }

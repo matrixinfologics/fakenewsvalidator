@@ -16,4 +16,5 @@
     <div class="inner-info-content">
         {!!html_entity_decode($tweetPreview)!!}
     </div>
+    @include('layouts.app-partials.flag-buttons')
 @endsection

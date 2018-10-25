@@ -11,6 +11,8 @@ class Setting extends Model
     const TYPE_TWITTER_CONSUMER_SECRET = 'twitter_consumer_secret';
     const TYPE_TWITTER_ACCESS_TOKEN = 'twitter_access_token';
     const TYPE_TWITTER_ACCESS_TOKEN_SECRET = 'twitter_access_token_secret';
+    const TYPE_TINEYE_PRIVATE_KEY = 'tineye_private_key';
+    const TYPE_TINEYE_PUBLIC_KEY = 'tineye_public_key';
 
     public $timestamps = false;
 

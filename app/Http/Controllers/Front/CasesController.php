@@ -11,10 +11,13 @@ use Auth;
 use Mapper;
 use Cache;
 use App\NewsCase;
+use App\CaseResult;
 use App\Company;
+use App\Setting;
 use App\CaseSectionResult;
 use App\Classes\TwitterManager;
 use App\Classes\TwitterUser;
+use App\Classes\TineyeApi;
 use Illuminate\Database\Eloquent\Collection;
 
 class CasesController extends Controller
@@ -24,6 +27,9 @@ class CasesController extends Controller
 
     /** @var Company */
     private $company;
+
+    /** @var Setting */
+    private $settings;
 
     /** @var TwitterManager */
     private $twitterManager;
@@ -37,16 +43,19 @@ class CasesController extends Controller
      * Create a new controller instance.
      *
      * @param Case $case
+     * @param Company $company
      * @param TwitterManager $twitterManager
+     * @param Setting $settings
      * @return void
      */
-    public function __construct(NewsCase $case, Company $company, TwitterManager $twitterManager)
+    public function __construct(NewsCase $case, Company $company, TwitterManager $twitterManager, Setting $settings)
     {
        $this->middleware('auth:front');
 
        $this->case = $case;
        $this->company = $company;
        $this->twitterManager = $twitterManager;
+       $this->settings = $settings;
        $this->cacheExpiryTime = now()->addMinutes(60);
     }
 
@@ -89,6 +98,26 @@ class CasesController extends Controller
         $caseSectionResult->section_id = $sectionId;
         $caseSectionResult->flag = $request->get('flag');
 
+        $caseSectionResult->user()->associate(Auth::user());
+        $caseSectionResult->save();
+
+        return redirect()->back()
+            ->with('success','Case Flaged successfully!');
+    }
+
+    /**
+     * Flag a case
+     *
+     * @param Request $request
+     * @param int $caseId
+     * @return boolean
+     */
+    public function flagCase(Request $request, $caseId){
+        $caseSectionResult = new CaseResult;
+        $caseSectionResult->flag = $request->get('flag');
+
+        $case = $this->case->findorFail($caseId);
+        $caseSectionResult->case()->associate($case);
         $caseSectionResult->user()->associate(Auth::user());
         $caseSectionResult->save();
 
@@ -205,6 +234,7 @@ class CasesController extends Controller
     public function caseInfo($id)
     {
         try{
+            $sectionId = NewsCase::SECTION_INFO;
             $cacheKey = "info_{$id}";
             $case = $this->case->findorFail($id);
 
@@ -216,7 +246,7 @@ class CasesController extends Controller
 
             $tweetPreview = Cache::get($cacheKey);
 
-            return view('Front.sections.info', ['case' => $case, 'tweetPreview' => $tweetPreview]);
+            return view('Front.sections.info', ['case' => $case, 'sectionId' => $sectionId, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
             return redirect('/')
                             ->with('error', $e->getMessage())
@@ -264,6 +294,7 @@ class CasesController extends Controller
     public function postAnalysis($id)
     {
         try{
+            $sectionId = NewsCase::SECTION_POST_ANALYSIS;
             $cacheKey = "analysis_{$id}";
             $case = $this->case->findorFail($id);
 
@@ -274,7 +305,7 @@ class CasesController extends Controller
 
             $tweetPreview = Cache::get($cacheKey);
 
-            return view('Front.sections.analysis', ['case' => $case, 'tweetPreview' => $tweetPreview]);
+            return view('Front.sections.analysis', ['case' => $case, 'sectionId' => $sectionId, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
             return redirect('/')
                             ->with('error', 'Invalid Tweet, Please try again.')
@@ -422,5 +453,69 @@ class CasesController extends Controller
 
         return view('Front.sections.authorprofile', ['case' => $case, 'sectionId' => $sectionId, 'stats' => $stats]);
     }
+
+    /**
+     * Image Search
+     *
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     */
+    public function imageSearch(Request $request, $id)
+    {
+        $sectionId = NewsCase::SECTION_IMAGE_SEARCH;
+        $case = $this->case->findorFail($id);
+        $data = '';
+
+        if ($request->isMethod('post')) {
+            $image = $request->file('image');
+            $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
+            $destinationPath = storage_path();
+            $image->move($destinationPath, $input['imagename']);
+            $imageFilepath = $destinationPath.'/'.$input['imagename'];
+            $imageData = file_get_contents($imageFilepath);
+
+            $tineyeApi = new TineyeApi(
+                                $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PRIVATE_KEY),
+                                $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PUBLIC_KEY)
+                            );
+            $data = $tineyeApi->searchImage($imageData, $input['imagename']);
+
+            unlink($imageFilepath); // Deleting image from server
+        }
+
+        return view('Front.sections.imagesearch', ['case' => $case, 'sectionId' => $sectionId, 'data' => $data]);
+    }
+
+    /**
+     * Source Cross Check
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function sourceCrossCheck($id)
+    {
+        $sectionId = NewsCase::SECTION_SOURCE_CROSSS_CHECKING;
+        $case = $this->case->findorFail($id);
+
+        $fakeCount = $case->results()->where('flag', NewsCase::FLAG_FAKE)->count();
+
+        return view('Front.sections.source-cross', ['case' => $case, 'sectionId' => $sectionId, 'fakeCount' => $fakeCount]);
+    }
+
+    /**
+    * Case Results
+    *
+    * @param int $id
+    * @return Response
+    */
+    public function results($id)
+    {
+        $case = $this->case->findorFail($id);
+        $sections = $this->case->getSections();
+
+        return view('Front.sections.results', ['case' => $case, 'sections' => $sections]);
+    }
+
 
 }

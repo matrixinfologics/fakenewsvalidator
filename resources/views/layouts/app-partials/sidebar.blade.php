@@ -29,11 +29,11 @@
         <li class="{{ Route::currentRouteName() == 'samearea-posts'?'active':'' }}">
             <a href="{{ route('samearea-posts', $case) }}" >Similar Posts From Same Area</a>
         </li>
-        <li>
-            <a href="#">Image Search Verification</a>
+        <li class="{{ Route::currentRouteName() == 'image-search'?'active':'' }}">
+            <a href="{{ route('image-search', $case) }}" >Image Search Verification</a>
         </li>
-        <li>
-            <a href="#">Source Cross Checking</a>
+        <li class="{{ Route::currentRouteName() == 'source-cross'?'active':'' }}">
+            <a href="{{ route('source-cross', $case) }}" >Source Cross Checking</a>
         </li>
         <li>
             <a href="#">Discussions</a>

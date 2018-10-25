@@ -18,7 +18,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{ Route::currentRouteName() == 'settings'?'active':'' }}"><a href="{{ route('settings') }}"><i class="fa fa-cog"></i> <span>Twitter API Settings</span></a></li>
+                        <li class="{{ Route::currentRouteName() == 'settings'?'active':'' }}"><a href="{{ route('settings') }}"><i class="fa fa-cog"></i> <span>API Settings</span></a></li>
                         <li class="{{ Route::currentRouteName() == 'clearcache'?'active':'' }}"><a href="{{ route('clearcache') }}"><i class="fa fa-eraser"></i> <span>Clear Cache</span></a></li>
                     </ul>
                 </li>
