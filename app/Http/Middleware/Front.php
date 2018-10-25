@@ -18,7 +18,7 @@ class Front
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guard('front')->check() && Auth::guard('front')->user()->isUser()) {
+        if (Auth::guard('front')->check() && Auth::guard('front')->user()->isUser() && sizeof(Auth::guard('front')->user()->company()->get())) {
                 return $next($request);
         } else {
             Auth::guard('front')->logout();
