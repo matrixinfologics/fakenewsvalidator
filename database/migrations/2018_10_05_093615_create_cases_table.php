@@ -24,6 +24,8 @@ class CreateCasesTable extends Migration
             $table->string('longitude', 500)->nullable();
             $table->string('tweet_author')->nullable();
             $table->unsignedInteger('user_id')->nullable();
+            $table->enum('flag', ['in_analysis', 'trusted', 'fake'])
+                ->default('in_analysis');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

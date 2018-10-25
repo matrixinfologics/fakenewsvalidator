@@ -11,6 +11,7 @@ use Auth;
 use Mapper;
 use Cache;
 use App\NewsCase;
+use App\CaseResult;
 use App\Company;
 use App\Setting;
 use App\CaseSectionResult;
@@ -97,6 +98,26 @@ class CasesController extends Controller
         $caseSectionResult->section_id = $sectionId;
         $caseSectionResult->flag = $request->get('flag');
 
+        $caseSectionResult->user()->associate(Auth::user());
+        $caseSectionResult->save();
+
+        return redirect()->back()
+            ->with('success','Case Flaged successfully!');
+    }
+
+    /**
+     * Flag a case
+     *
+     * @param Request $request
+     * @param int $caseId
+     * @return boolean
+     */
+    public function flagCase(Request $request, $caseId){
+        $caseSectionResult = new CaseResult;
+        $caseSectionResult->flag = $request->get('flag');
+
+        $case = $this->case->findorFail($caseId);
+        $caseSectionResult->case()->associate($case);
         $caseSectionResult->user()->associate(Auth::user());
         $caseSectionResult->save();
 
@@ -213,6 +234,7 @@ class CasesController extends Controller
     public function caseInfo($id)
     {
         try{
+            $sectionId = NewsCase::SECTION_INFO;
             $cacheKey = "info_{$id}";
             $case = $this->case->findorFail($id);
 
@@ -224,7 +246,7 @@ class CasesController extends Controller
 
             $tweetPreview = Cache::get($cacheKey);
 
-            return view('Front.sections.info', ['case' => $case, 'tweetPreview' => $tweetPreview]);
+            return view('Front.sections.info', ['case' => $case, 'sectionId' => $sectionId, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
             return redirect('/')
                             ->with('error', $e->getMessage())
@@ -272,6 +294,7 @@ class CasesController extends Controller
     public function postAnalysis($id)
     {
         try{
+            $sectionId = NewsCase::SECTION_POST_ANALYSIS;
             $cacheKey = "analysis_{$id}";
             $case = $this->case->findorFail($id);
 
@@ -282,7 +305,7 @@ class CasesController extends Controller
 
             $tweetPreview = Cache::get($cacheKey);
 
-            return view('Front.sections.analysis', ['case' => $case, 'tweetPreview' => $tweetPreview]);
+            return view('Front.sections.analysis', ['case' => $case, 'sectionId' => $sectionId, 'tweetPreview' => $tweetPreview]);
         } catch(\Exception $e){
             return redirect('/')
                             ->with('error', 'Invalid Tweet, Please try again.')
@@ -478,6 +501,20 @@ class CasesController extends Controller
         $fakeCount = $case->results()->where('flag', NewsCase::FLAG_FAKE)->count();
 
         return view('Front.sections.source-cross', ['case' => $case, 'sectionId' => $sectionId, 'fakeCount' => $fakeCount]);
+    }
+
+    /**
+    * Case Results
+    *
+    * @param int $id
+    * @return Response
+    */
+    public function results($id)
+    {
+        $case = $this->case->findorFail($id);
+        $sections = $this->case->getSections();
+
+        return view('Front.sections.results', ['case' => $case, 'sections' => $sections]);
     }
 
 

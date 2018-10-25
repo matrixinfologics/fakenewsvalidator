@@ -14,4 +14,12 @@ class CaseResult extends Model
     {
         return $this->belongsTo('App\NewsCase');
     }
+
+    /**
+    * Get the User that owns the case.
+    */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

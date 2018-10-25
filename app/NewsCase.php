@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 
 class NewsCase extends Model
 {
     const FLAG_FAKE = 'fake';
     const FLAG_TRUSTED = 'trusted';
+    const FLAG_IN_ANALYSIS = 'in_alaysis';
 
     const SECTION_INFO = 1;
     const SECTION_POST_ANALYSIS = 2;
@@ -37,7 +39,7 @@ class NewsCase extends Model
     }
 
     /**
-    * Get users of company.
+    * Get discussions of case.
     */
     public function discussions()
     {
@@ -45,11 +47,50 @@ class NewsCase extends Model
     }
 
     /**
-    * Get users of company.
+    * Get results of case.
     */
     public function results()
     {
         return $this->hasMany('App\CaseResult', 'case_id');
+    }
+
+    /**
+    * Get section results of case.
+    */
+    public function sectionFakeResults()
+    {
+        return $this->hasMany('App\CaseSectionResult', 'case_id')->where('flag', self::FLAG_FAKE);
+    }
+
+    /**
+    * Get section results of case.
+    */
+    public function sectionTrustedResults()
+    {
+        return $this->hasMany('App\CaseSectionResult', 'case_id')->where('flag', self::FLAG_TRUSTED);
+    }
+
+    /**
+    * Get Setting types as array
+    *
+    * @return array
+    */
+    public function getSections()
+    {
+        $prefix = 'SECTION_';
+        $reflection = new ReflectionClass(self::class);
+        $constants  = $reflection->getConstants();
+
+        $prefixLength = strlen($prefix);
+        $options      = [];
+        foreach ($constants as $name => $value) {
+            if (substr($name, 0, $prefixLength) === $prefix) {
+                $enumOptionName = ucwords(strtolower(str_replace('_', ' ', substr($name, $prefixLength))));
+                $options[$value] = $enumOptionName;
+            }
+        }
+
+        return $options;
     }
 
 }

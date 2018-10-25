@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::post('/new', 'CasesController@storeCase')->name('newcase');
 
     Route::post('/section-flag/{section}/{case}', 'CasesController@flagCaseBySection')->name('section-flag');
+    Route::post('/flag-case/{case}', 'CasesController@flagCase')->name('flag-case');
 
     Route::get('/info/{case}', 'CasesController@caseInfo')->name('caseinfo');
     Route::get('/analysis/{case}', 'CasesController@postAnalysis')->name('analysis');
@@ -33,6 +34,7 @@ Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::get('/author-profile/{case}', 'CasesController@authorProfile')->name('author-profile');
     Route::match(['get', 'post'], '/image-search/{case}', 'CasesController@imageSearch')->name('image-search');
     Route::get('/source-cross-check/{case}', 'CasesController@sourceCrossCheck')->name('source-cross');
+    Route::get('/results/{case}', 'CasesController@results')->name('results');
     Route::get('/discussions/{case}', 'DiscussionController@discussion')->name('discussions');
     Route::post('/discussions/{case}', 'DiscussionController@discussionSave')->name('discussions');
 
