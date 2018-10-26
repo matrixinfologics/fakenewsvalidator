@@ -3,8 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Company;
 use App\Setting;
+use App\NewsCase;
 use App\User;
 use Auth;
 
@@ -37,6 +37,22 @@ class Company extends Model
     {
         return $this->users->where('role', User::ROLE_COMPANY_ADMIN)->first();
     }
+
+    /**
+    * Get comapny cases
+    *
+    * @param User|int $user
+    */
+    public function getCompanyCasesOfUsers($user)
+    {
+        if (is_int($user)) {
+            $user = User::find($user);
+        }
+
+        $companyUsers = $user->company->users()->get()->pluck('id');
+        return NewsCase::whereIn('user_id', $companyUsers);
+    }
+
 
     /**
     * return company api details

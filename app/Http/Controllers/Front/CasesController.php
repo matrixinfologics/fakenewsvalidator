@@ -139,7 +139,7 @@ class CasesController extends Controller
             $cases = $cases->where('title','LIKE',"%{$search}%");
         }
 
-        $cases = $cases->paginate($this->pagination);
+        $cases = $cases->orderBy('flag')->paginate($this->pagination);
         return view('Front.index', ['cases' => $cases]);
     }
 

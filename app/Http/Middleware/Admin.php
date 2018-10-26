@@ -22,7 +22,7 @@ class Admin
             if (Auth::user()->isAdmin()) {
                 return $next($request);
             } elseif (Auth::user()->isCompanyAdmin() &&
-                $request->is('admin/users/*', 'admin', 'admin/users', 'admin/companies/*') &&
+                $request->is('admin/users/*', 'admin', 'admin/users', 'admin/companies/*' ,'admin/cases/*','admin/cases' ) &&
                 Auth::user()->hasPermissionToAction($request)) {
 
                 return $next($request);

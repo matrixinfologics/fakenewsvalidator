@@ -9,7 +9,7 @@ class NewsCase extends Model
 {
     const FLAG_FAKE = 'fake';
     const FLAG_TRUSTED = 'trusted';
-    const FLAG_IN_ANALYSIS = 'in_alaysis';
+    const FLAG_IN_ANALYSIS = 'in_analysis';
 
     const SECTION_INFO = 1;
     const SECTION_POST_ANALYSIS = 2;
@@ -29,6 +29,31 @@ class NewsCase extends Model
      * @var string
      */
     protected $table = 'cases';
+
+    /**
+    * return full name of user
+    *
+    * @return string
+    */
+    public function getFlagStatusAttribute()
+    {
+        switch ($this->flag) {
+            case self::FLAG_FAKE:
+                $flag = "Fake";
+                break;
+
+            case self::FLAG_TRUSTED:
+                $flag = "Trusted";
+                break;
+
+            default:
+                $flag = "In Analysis";
+                break;
+        }
+
+        return $flag;
+    }
+
 
     /**
      * Get the User that owns the case.
