@@ -4,7 +4,11 @@
 @section('content')
 @php
     $totalResults = $case->sectionFakeResults()->count() + $case->sectionTrustedResults()->count();
-    $fakePrecentage = ($case->sectionFakeResults()->count()/$totalResults)*100;
+    $fakePrecentage = 0;
+    if($totalResults > 0){
+        $fakePrecentage = ($case->sectionFakeResults()->count()/$totalResults)*100;
+    }
+
 @endphp
     <div class="inner-info-content">
         <table class="table table-striped case_results">

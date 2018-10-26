@@ -35,11 +35,11 @@
         <li class="{{ Route::currentRouteName() == 'source-cross'?'active':'' }}">
             <a href="{{ route('source-cross', $case) }}" >Source Cross Checking</a>
         </li>
-        <li>
-            <a href="#">Discussions</a>
+        <li class="{{ Route::currentRouteName() == 'discussions'?'active':'' }}">
+            <a href="{{ route('discussions', $case) }}" >Discussions</a>
         </li>
-        <li>
-            <a href="#">Result</a>
+        <li class="{{ Route::currentRouteName() == 'results'?'active':'' }}">
+            <a href="{{ route('results', $case) }}" >Result</a>
         </li>
     </ul>
 </nav>
