@@ -29,7 +29,7 @@
                                 <tr>
                                   <td><a href="{{ route('caseinfo', $case->id) }}" title="{{ $case->title }}">{{ $case->title }}</a></td>
                                   <td>{{ $case->user? $case->user->name:'' }} {{ $case->created_at->format('d/m/Y h:i') }}</td>
-                                  <td>In Analysis</td>
+                                  <td>{{ $case->flagStatus }}</td>
                                 </tr>
                             @endforeach
                         @else

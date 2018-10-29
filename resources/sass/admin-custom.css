@@ -1,5 +1,11 @@
 .select2-container{width: 100% !important;}
 .dl-horizontal dd {word-wrap: break-word;}
+span.fa.fa-flag.trusted_button {
+    color: #008000;
+}
+span.fa.fa-flag.fake_button {
+    color: #ff0000;
+}
 
 /* Responsive css */
 @media (max-width: 991px){

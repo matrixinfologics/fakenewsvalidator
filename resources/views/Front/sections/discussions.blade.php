@@ -3,8 +3,8 @@
 @section('page-header', 'Discussions')
 @section('content')
      <div class="inner-info-content image_search">
-        @if(!empty($discussions))
-            <div class="discussions">
+        <div class="discussions">
+            @if(sizeof($discussions) > 0)
                 @foreach($discussions as $discussion)
                     <div class="row">
                         <div class="col-md-2">
@@ -16,10 +16,11 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
-        @else
-            <p>No item found</p>
-        @endif
+            @else
+                <p>Start Discussion</p>
+            @endif
+
+        </div>
         <div class="discussions_form">
             {{ Form::open(['url'=> route('discussions', $case->id)]) }}
                 <div class="form-group {{ $errors->first('message')?'has-error':'' }}">
