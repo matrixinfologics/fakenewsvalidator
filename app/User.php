@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Company;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Aginev\SearchFilters\Filterable;
@@ -121,6 +122,18 @@ class User extends Authenticatable
 
             return false;
         }
+
+        if($request->route('case')) {
+            $user = User::find($this->id);
+            $companyCases = $user->company->getCompanyCases($user->company)->get()->pluck('id')->toArray();
+
+            if (in_array($request->route('case'), $companyCases)){
+                return true;
+            }
+
+            return false;
+        }
+
 
         return true;
 

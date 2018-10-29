@@ -23,6 +23,19 @@
                     </ul>
                 </li>
             @endif
+            <li class="treeview {{ Route::currentRouteName() == 'cases.index' || Route::currentRouteName() == 'cases.fake' || Route::currentRouteName() == 'cases.trusted'?'active':'' }}">
+                <a href="#">
+                    <i class="fa fa-newspaper-o"></i> <span>Cases</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ Route::currentRouteName() == 'cases.index'?'active':'' }}"><a href="{{ route('cases.index') }}"><i class="fa fa-newspaper-o"></i> <span>In-Analysis</span></a></li>
+                    <li class="{{ Route::currentRouteName() == 'cases.fake'?'active':'' }}"><a href="{{ route('cases.fake') }}"><i class="fa fa-newspaper-o"></i> <span>Fake</span></a></li>
+                    <li class="{{ Route::currentRouteName() == 'cases.trusted'?'active':'' }}"><a href="{{ route('cases.trusted') }}"><i class="fa fa-newspaper-o"></i> <span>Trusted</span></a></li>
+                </ul>
+            </li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>

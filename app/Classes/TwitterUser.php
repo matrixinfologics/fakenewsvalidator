@@ -194,7 +194,9 @@ class TwitterUser
             }
         }
 
-        $all_friends_data = array_merge($all_friends_data, $this->usersLookupName($screen_names));
+        if(is_array($this->usersLookupName($screen_names))) {
+            $all_friends_data = array_merge($all_friends_data, $this->usersLookupName($screen_names));
+        }
         $indexed_data = array();
         foreach ($all_friends_data as $friend_data) {
             $indexed_data[$friend_data->screen_name] = $friend_data;
@@ -247,6 +249,9 @@ class TwitterUser
         $user_stats->most_favorited      = [];
         $user_stats->hashtags            = [];
         $user_stats->symbols             = [];
+        $user_stats->user_mentions       = [];
+        $user_stats->most_retweeted_users= [];
+        $user_stats->most_replied_to_users = [];
 
         $all_timeline = $this->getUserTweets($this->user->screen_name);
         foreach ($all_timeline as $tweet) {

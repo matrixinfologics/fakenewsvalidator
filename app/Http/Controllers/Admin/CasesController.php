@@ -46,7 +46,7 @@ class CasesController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->isCompanyAdmin()) {
-            $cases = $this->company->getCompanyCasesOfUsers(Auth::Id())->where('flag', NewsCase::FLAG_IN_ANALYSIS)->paginate($this->pagination);
+            $cases = $this->company->getCompanyCasesOfUser(Auth::Id())->where('flag', NewsCase::FLAG_IN_ANALYSIS)->paginate($this->pagination);
         } else {
             $cases = $this->newsCase->where('flag', NewsCase::FLAG_IN_ANALYSIS)->paginate($this->pagination);
         }
@@ -89,7 +89,7 @@ class CasesController extends Controller
     public function trustedCases(Request $request)
     {
         if (Auth::user()->isCompanyAdmin()) {
-            $cases = $this->company->getCompanyCasesOfUsers(Auth::Id())->where('flag', NewsCase::FLAG_TRUSTED)->paginate($this->pagination);
+            $cases = $this->company->getCompanyCasesOfUser(Auth::Id())->where('flag', NewsCase::FLAG_TRUSTED)->paginate($this->pagination);
         } else {
             $cases = $this->newsCase->where('flag', NewsCase::FLAG_TRUSTED)->paginate($this->pagination);
         }
@@ -117,7 +117,7 @@ class CasesController extends Controller
     public function fakeCases(Request $request)
     {
         if (Auth::user()->isCompanyAdmin()) {
-            $cases = $this->company->getCompanyCasesOfUsers(Auth::Id())->where('flag', NewsCase::FLAG_FAKE)->paginate($this->pagination);
+            $cases = $this->company->getCompanyCasesOfUser(Auth::Id())->where('flag', NewsCase::FLAG_FAKE)->paginate($this->pagination);
         } else {
             $cases = $this->newsCase->where('flag', NewsCase::FLAG_FAKE)->paginate($this->pagination);
         }

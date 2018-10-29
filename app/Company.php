@@ -39,17 +39,28 @@ class Company extends Model
     }
 
     /**
-    * Get comapny cases
+    * Get comapny cases by user
     *
     * @param User|int $user
     */
-    public function getCompanyCasesOfUsers($user)
+    public function getCompanyCasesOfUser($user)
     {
         if (is_int($user)) {
             $user = User::find($user);
         }
 
         $companyUsers = $user->company->users()->get()->pluck('id');
+        return NewsCase::whereIn('user_id', $companyUsers);
+    }
+
+    /**
+    * Get comapny cases
+    *
+    * @param Company $company
+    */
+    public function getCompanyCases($company)
+    {
+        $companyUsers = $company->users()->get()->pluck('id');
         return NewsCase::whereIn('user_id', $companyUsers);
     }
 
