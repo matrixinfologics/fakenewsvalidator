@@ -182,6 +182,7 @@ class CasesController extends Controller
         }
 
         $location = '';
+        $tweetImage = isset($tweet->entities->media[0]->media_url) ? $tweet->entities->media[0]->media_url : null;
         if($tweet->user->location != '') {
             $location = $tweet->user->location;
         } else {
@@ -192,6 +193,7 @@ class CasesController extends Controller
         $this->case->url = rtrim($request->get('url'),"/");
         $this->case->keywords = $request->get('keywords');
         $this->case->tweet_id = $tweet->id;
+        $this->case->tweet_image = $tweetImage;
         $this->case->location = $location;
         $this->case->tweet_author = $tweet->user->screen_name;
 
@@ -437,7 +439,7 @@ class CasesController extends Controller
      */
     public function authorProfile($id)
     {
-        $cacheKey = "stats_{{$id}}";
+        $cacheKey = "stats_{$id}";
         $sectionId = NewsCase::SECTION_AUTHOR_PROFILE;
         $case = $this->case->findorFail($id);
         $screen_name = $case->tweet_author;
@@ -463,28 +465,32 @@ class CasesController extends Controller
      */
     public function imageSearch(Request $request, $id)
     {
-        $sectionId = NewsCase::SECTION_IMAGE_SEARCH;
-        $case = $this->case->findorFail($id);
-        $data = '';
+        try{
+            $cacheKey = "image_search_{$id}";
+            $sectionId = NewsCase::SECTION_IMAGE_SEARCH;
+            $case = $this->case->findorFail($id);
 
-        if ($request->isMethod('post')) {
-            $image = $request->file('image');
-            $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
-            $destinationPath = storage_path();
-            $image->move($destinationPath, $input['imagename']);
-            $imageFilepath = $destinationPath.'/'.$input['imagename'];
-            $imageData = file_get_contents($imageFilepath);
+            if ($case->tweet_image == null)
+                throw new \Exception("Tweet has no image!");
 
-            $tineyeApi = new TineyeApi(
-                                $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PRIVATE_KEY),
-                                $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PUBLIC_KEY)
-                            );
-            $data = $tineyeApi->searchImage($imageData, $input['imagename']);
+            if(!Cache::has($cacheKey)) {
+                $tineyeApi = new TineyeApi(
+                        $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PRIVATE_KEY),
+                        $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PUBLIC_KEY)
+                    );
+                $data = $tineyeApi->searchImageUrl($case->tweet_image);
+                Cache::put($cacheKey, $data, $this->cacheExpiryTime);
+            }
 
-            unlink($imageFilepath); // Deleting image from server
+            $data = Cache::get($cacheKey);
+
+            return view('Front.sections.imagesearch', ['case' => $case, 'sectionId' => $sectionId, 'data' => $data]);
+        } catch(\Exception $e){
+            return redirect()->back()
+                            ->with('error', $e->getMessage())
+                            ->withInput();
         }
 
-        return view('Front.sections.imagesearch', ['case' => $case, 'sectionId' => $sectionId, 'data' => $data]);
     }
 
     /**

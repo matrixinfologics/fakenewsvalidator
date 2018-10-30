@@ -2,12 +2,6 @@
 @section('title', 'Image Search')
 @section('page-header', 'Image Search')
 @section('content')
-    <div class="inner-info-content image_upload_form">
-        {{ Form::open(['url'=> route('image-search', $case->id), 'files' => true]) }}
-            {{ Form::file('image', array('class' => 'image', 'required' => true)) }}
-            {{ Form::button('Upload', ['type' => 'submit', 'class' => 'btn btn-primary pull-right']) }}
-        {{ Form::close() }}
-    </div>
      <div class="inner-info-content image_search">
         @if (!empty($data['messages']))
             <div class="alert alert-danger alert-block">
