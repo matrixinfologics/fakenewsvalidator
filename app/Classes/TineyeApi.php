@@ -14,49 +14,31 @@ class TineyeApi
         $this->apiPublicKey = $apiPublicKey;
     }
 
-    public function searchImage($imageData, $imageName)
+    function searchImageUrl($imageUrl)
     {
         $apiUrl = 'https://api.tineye.com/rest/search/';
-        $httpVerb = "POST";
-        // init CURL seesion
-        $handle = curl_init();
+        $data = array(
+            "offset" => "0",
+            "limit" => "20",
+            "image_url" => $imageUrl
+        );
 
-        // content-type header
-        $boundary = "---------------------" . md5(mt_rand() . microtime());
-        $contentTypeHeader = "multipart/form-data; boundary=$boundary";
-
+        $sortedData = ksort($data);
+        $queryData = http_build_query($data);
+        $signatureData = strtolower($queryData);
+        $httpVerb = "GET";
         $date = time();
         $nonce = uniqid();
-        $limit = "10";
 
-        $apiSigRaw = $this->apiPrivateKey.$httpVerb.$contentTypeHeader.$imageName.$date.$nonce.$apiUrl."limit=$limit";
+        $stringToSign = $this->apiPrivateKey.$httpVerb.$date.$nonce.$apiUrl.$signatureData;
+        $apiSignature = hash_hmac("SHA256", $stringToSign, $this->apiPrivateKey);
 
-        $apiSig = hash_hmac("SHA256", $apiSigRaw, $this->apiPrivateKey);
+        $url = $apiUrl . "?api_key=" . $this->apiPublicKey. "&";
+        $url .= $queryData . "&date=" . $date . "&nonce=" . $nonce . "&api_sig=" . $apiSignature;
 
-        $headerBoundary = $boundary;
-        $boundary = '--'.$boundary;
+        $apiResponse = json_decode(file_get_contents($url), True);
 
-        $post_str = $boundary . "\nContent-Disposition: form-data; name=\"image_upload\"; filename=\"$imageName\"\nContent_Type: application/octet-stream\n\n$imageData\n";
-        $post_str .= $boundary . "\nContent-Disposition: form_data; name=\"api_key\"\n\n$this->apiPublicKey\n";
-        $post_str .= $boundary . "\nContent-Disposition: form_data; name=\"date\"\n\n$date\n";
-        $post_str .= $boundary . "\nContent-Disposition: form_data; name=\"nonce\"\n\n$nonce\n";
-        $post_str .= $boundary . "\nContent-Disposition: form_data; name=\"api_sig\"\n\n$apiSig\n";
-        $post_str .= $boundary . "\nContent-Disposition: form_data; name=\"limit\"\n\n$limit\n";
-        $post_str .= $boundary . "--";
-
-        curl_setopt($handle, CURLOPT_URL, $apiUrl);
-        curl_setopt($handle, CURLOPT_POST, 1);
-        curl_setopt($handle, CURLOPT_POSTFIELDS, $post_str);
-        curl_setopt($handle, CURLOPT_HTTPHEADER, array("Expect: 100-continue", "Content-Type: multipart/form-data; boundary=$headerBoundary"));
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
-
-        // Call API and convert results to a usable JSON object.
-        $apiResponse = curl_exec($handle);
-        $apiJsonResponse = json_decode($apiResponse, True);
-
-        curl_close($handle);
-
-        return $apiJsonResponse;
+        return $apiResponse;
     }
 
 }

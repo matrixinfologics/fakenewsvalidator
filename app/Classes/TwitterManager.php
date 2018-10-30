@@ -61,7 +61,7 @@ class TwitterManager
      */
     public function getTweetPreview($tweetUrl){
         try{
-            $tweet = Twitter::getOembed(['url' => $tweetUrl, 'hide_media' => true]);
+            $tweet = Twitter::getOembed(['url' => $tweetUrl, 'hide_media' => false]);
             return $tweet->html;
         } catch (RunTimeException $e) {
             throw new \Exception("Please provide correct detail!");

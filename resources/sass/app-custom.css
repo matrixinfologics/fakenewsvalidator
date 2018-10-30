@@ -863,6 +863,9 @@ form.flag_fake {
 }
 .case_results{width: 60%}
 
+/*30-10-2018*/
+
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
@@ -885,8 +888,9 @@ img.icon {
     margin-bottom: 20px;
 }
 .most-reply img {
-    width: 70% !important;
-    margin: 0 0 0 20px !important;
+    width: auto !important;
+    margin: 0 0 0 0px !important;
+    display: inherit;
 }
 span.mention {
     padding:6px !important;
@@ -936,6 +940,12 @@ img.user-prof {
     font-size: 12px;
     padding: 3px 0 11px 0px;
 }
+form.flag_fake {float: none;}
+button.btn.btn-flag {padding: 5px 30px 5px 30px;}
+.inner-info-content.flag_button {float: left;}
+.inner-info-content {
+    overflow: hidden;
+}
 }
 @media (max-width: 768px) {
     #sidebar {
@@ -983,6 +993,9 @@ img.user-prof {
 .most-reply img {
     width: auto !important;
 }
+.discussions_form form {
+    width: 100%;
+}
 }
 @media (max-width: 767px) {
 .case-search-bar input {
@@ -1020,11 +1033,24 @@ img.twitter-user-statistics {
 img.user-prof {
     width: auto !important;
 }
-.most-reply img {
-    width: auto !important;
-}
 .inner-info-content h3 {
     margin-top: 14px !important;
+}
+.inner-info-content {
+    padding: 35px 5px 35px 5px;
+}
+.most-reply img {
+    margin: 0 0 0 0 !important;
+    display: inline-block;
+    width: auto !important;
+}
+}
+@media (max-width: 767px) and (min-width: 320px) {
+#content {
+    overflow: hidden;
+}
+.inner-info.faded {
+    opacity: 0.2;
 }
 }
 @media (max-width: 480px) {
@@ -1046,6 +1072,23 @@ img.twitter-user-statistics {
 }
 img.user-prof {
     width: auto !important;
+}
+.main-login .form-main {padding: 20px 10px 20px 10px;}
+.inner-info-content.main-login {padding: 35px 5px 35px 5px;}
+button.btn.btn-flag {
+    padding: 5px 10px 5px 10px;
+    font-size: 15px;
+}
+.inner-info-content {
+    padding: 35px 5px 35px 5px;
+}
+}
+@media (max-width: 414px){
+#sidebar {
+    min-width: 287px;
+}
+#sidebar {
+    margin-left: -287px;
 }
 }
 @media (max-width: 379px) {
@@ -1071,6 +1114,9 @@ img.twitter-user-statistics {
 }
 img.user-prof {
     width: auto !important;
+}
+#sidebar {
+    min-width: 220px;
 }
 }
 @media (max-width: 320px) {
