@@ -39,7 +39,12 @@
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
                     <div class="row">
-                        <div class="col-xs-4">
+                        <div class="col-xs-6">
+                            <a href="{{ route('password.forgot') }}" class="">Forgot Password</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
                             {{ Form::submit('Sign In', ['class' => 'btn btn-primary btn-block btn-flat']) }}
                         </div>
                     </div>

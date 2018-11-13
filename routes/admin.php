@@ -30,6 +30,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('cases/trusted', 'CasesController@trustedCases')->name('cases.trusted');
     Route::get('cases/fake', 'CasesController@fakeCases')->name('cases.fake');
     Route::get('cases/flagcase/{case}', 'CasesController@flagCase')->name('cases.flag');
+    Route::get('cases/info/{case}', 'CasesController@caseInfo')->name('cases.info');
     // Settings
     Route::get('/settings', 'SettingController@index')->name('settings');
     Route::post('/settings', 'SettingController@store')->name('settings.store');

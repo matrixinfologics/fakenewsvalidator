@@ -56,8 +56,11 @@ class CasesController extends Controller
             ->setColumn('id', 'Id')
             ->setColumn('title', 'Title', [
                 'wrapper' => function ($value, $row) {
-                    return '<a href="' . $row->url . '" target="_blank">' . $value . '</a>';
+                    return '<a href="' . route("cases.info", $row->id) . '" data-tooltip="'.$row->title.'">' . $value . '</a>';
                 },
+            ])
+            ->setColumn('company', 'Company',[
+                    'refers_to'   => 'User.Company.name'
             ])
             ->setColumn('fakeCount', 'Fake', [
                 'wrapper' => function ($value, $row) {
@@ -72,12 +75,24 @@ class CasesController extends Controller
             ->setColumn('created_at', 'Created At')
             ->setActionColumn([
                 'wrapper' => function ($value, $row) {
-                    return '<a href="' . route("cases.flag", [$row->id, 'flag' => NewsCase::FLAG_TRUSTED]) . '" title="Flag Trusted" class="btn btn-xs"><span class="fa fa-flag trusted_button" aria-hidden="true"></span></a>
-                            <a href="' . route("cases.flag", [$row->id, 'flag' => NewsCase::FLAG_FAKE]) . '" title="Flag Fake" class="btn btn-xs"><span class="fa fa-flag fake_button" aria-hidden="true"></span></a>';
+                    return '<a href="' . route("cases.flag", [$row->id, 'flag' => NewsCase::FLAG_TRUSTED]) . '" data-tooltip="Flag Trusted" class="btn btn-xs"><span class="fa fa-flag trusted_button" aria-hidden="true"></span></a>
+                            <a href="' . route("cases.flag", [$row->id, 'flag' => NewsCase::FLAG_FAKE]) . '" data-tooltip="Flag Fake" class="btn btn-xs"><span class="fa fa-flag fake_button" aria-hidden="true"></span></a>';
                 },
             ]);
 
         return view('Admin.cases.index', ['grid' => $grid, 'title' => 'News']);
+    }
+
+    /**
+    * Show the case info
+    *
+    * @param int $id
+    * @return Response
+    */
+    public function caseInfo($id)
+    {
+        $case = $this->newsCase->findorFail($id);
+        return view('Admin.cases.info', ['case' => $case]);
     }
 
     /**
@@ -99,8 +114,11 @@ class CasesController extends Controller
             ->setColumn('id', 'Id')
             ->setColumn('title', 'Title', [
                 'wrapper' => function ($value, $row) {
-                    return '<a href="' . $row->url . '" target="_blank">' . $value . '</a>';
+                    return '<a href="' . route("cases.info", $row->id) . '" data-tooltip="'.$row->title.'">' . $value . '</a>';
                 },
+            ])
+            ->setColumn('company', 'Company',[
+                    'refers_to'   => 'User.Company.name'
             ])
             ->setColumn('keywords', 'Keywords')
             ->setColumn('created_at', 'Created At');
@@ -127,8 +145,11 @@ class CasesController extends Controller
             ->setColumn('id', 'Id')
             ->setColumn('title', 'Title', [
                 'wrapper' => function ($value, $row) {
-                    return '<a href="' . $row->url . '" target="_blank">' . $value . '</a>';
+                    return '<a href="' . route("cases.info", $row->id) . '" data-tooltip="'.$row->title.'">' . $value . '</a>';
                 },
+            ])
+            ->setColumn('company', 'Company',[
+                    'refers_to'   => 'User.Company.name'
             ])
             ->setColumn('keywords', 'Keywords')
             ->setColumn('created_at', 'Created At');

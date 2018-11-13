@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Company;
+use App\Notifications\MailResetPasswordToken;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Aginev\SearchFilters\Filterable;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
+    use Notifiable;
+
     const ROLE_ADMIN = 'admin';
     const ROLE_COMPANY_ADMIN = 'company_admin';
     const ROLE_USER = 'user';
@@ -36,6 +39,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MailResetPasswordToken($token));
+    }
 
     /**
      * Get the company that owns the user.

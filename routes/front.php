@@ -16,6 +16,17 @@ Route::get('/login', 'LoginController@showLogin')->name('login');
 Route::post('/login', 'LoginController@doLogin')->name('login');
 Route::get('/logout', 'LoginController@doLogout')->name('logout');
 
+Route::group(['prefix' => 'password'], function () {
+    // Reset request email
+    $this->get('reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.forgot');
+    $this->post('email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+
+    // Reset form
+    $this->get('reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    $this->post('reset', 'ResetPasswordController@reset')->name('password.update');
+});
+
+
 Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::get('/', 'CasesController@index')->name('cases');
 

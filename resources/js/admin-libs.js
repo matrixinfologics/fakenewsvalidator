@@ -2,6 +2,7 @@
 
 global.$ = require("jquery");
 global.jQuery = require("jquery");
+global.tooltip = require('tooltip');
 
 require('bootstrap');
 require('select2');

@@ -9,8 +9,19 @@ $(document).ready(function(){
         }
     });
 
-     // Init select2
+    // Init select2
     $('.select2').select2();
+
+    // Init tooltip
+    var config  = {
+      showDelay: 100,
+      style: {
+        padding: 5
+      },
+      offset: { x: 2, y: 2 }
+    }
+    tooltip(config);
+
     // Disable Select box
     jQuery('select.readonly option:not(:selected)').attr('disabled',true);
 

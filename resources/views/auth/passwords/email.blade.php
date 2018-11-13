@@ -20,25 +20,21 @@
             <div class="container">
                 <div class="form-main">
                     <h1>Fake News Validator</h1>
-                    {{ Form::open(['url'=> route('login')]) }}
-                        @if(!empty($errors->first()))
-                            <div class="row">
-                                <div class="alert alert-danger">
-                                    <span>{{ $errors->first() }}</span>
-                                </div>
+                    {{ Form::open(['url'=> route('password.email')]) }}
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
                             </div>
                         @endif
-                        <div class="form-group">
+                         <div class="form-group {{ $errors->first('email')?'has-error':'' }}">
                             {{ Form::email('email', '', ['class' => 'form-control', 'placeholder' => 'Email']) }}
+                            <span class="help-block">{{ $errors->first('email') }}</span>
                         </div>
-                        <div class="form-group">
-                            {{ Form::password('password', ['class' => 'form-control', 'placeholder' => 'Password']) }}
-                        </div>
-                        <a href="{{ route('password.forgot') }}" class="">Forgot Password</a>
-                        {{ Form::submit('Login', ['class' => 'btn btn-primary']) }}
+                        {{ Form::submit('Send Password Reset Link', ['class' => 'btn btn-primary']) }}
                     {{ Form::close() }}
                 </div>
             </div>
         </div>
     </body>
 </html>
+
