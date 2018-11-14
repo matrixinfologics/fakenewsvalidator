@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('title', 'Author Profile')
 @section('page-header', 'Author Profile')
+@section('refresh-button')
+    <a href="{{ route('cache', [$case, $sectionId]) }}" class="btn btn-success">Refresh</a>
+@endsection
 @section('content')
 
 @php

@@ -6,14 +6,12 @@
         <div class="discussions">
             @if(sizeof($discussions) > 0)
                 @foreach($discussions as $discussion)
-                    <div class="row">
-                        <div class="col-md-2">
-                            <strong>{{ $discussion->user->name }}</strong>
-                            <p>{{ $discussion->created_at->format('d/m/Y h:i') }}</p>
-                        </div>
-                        <div class="col-md-10">
+                    <div class="discuss_main{{ Auth::id() == $discussion->user->id ? ' my-msg':'' }}">
+
+                        <div class="message_main">
                             <p>{{ $discussion->message }}</p>
                         </div>
+                        <p class="message_detail"><strong>By</strong> <i>{{ $discussion->user->name }}</i> <strong>On </strong> <i>{{ $discussion->created_at->format('d/m/Y h:i') }} </i> </p>
                     </div>
                 @endforeach
             @else

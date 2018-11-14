@@ -32,6 +32,7 @@ $withoutSidebar = isset($withoutSidebar)??false;
                 <div class="container">
                     @include('layouts.flash-message')
                     <h3 class="info-head">@yield('page-header')</h3>
+                    @yield('refresh-button')
                     @yield('content')
                 </div>
             </div>

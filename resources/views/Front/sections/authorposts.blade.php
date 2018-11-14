@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('title', 'Author Latest Posts')
 @section('page-header', 'Author Latest Posts')
+@section('refresh-button')
+    <a href="{{ route('cache', [$case, $sectionId]) }}" class="btn btn-success">Refresh</a>
+@endsection
 @section('content')
     <div class="inner-info-content">
         @if(!empty($authorPosts))

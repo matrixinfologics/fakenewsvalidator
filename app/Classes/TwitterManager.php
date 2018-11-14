@@ -47,7 +47,7 @@ class TwitterManager
      */
     public function verifyTweet($tweetId){
         try{
-            return Twitter::getTweet($tweetId);
+            return Twitter::getTweet($tweetId, ['include_entities' => true]);
         } catch (RunTimeException $e) {
             return false;
         }
@@ -77,19 +77,12 @@ class TwitterManager
     public function getAuthorPosts($author){
         try{
             $tweets = Twitter::getUserTimeline(['screen_name' => $author, 'count' => 15, 'exclude_replies'=> true, 'include_rts' => false]);
+            $tweets = $this->filterContent($tweets);
 
             $authorPosts = [];
-            $i = 0;
-            foreach ($tweets as $key => $tweet) {
-
-                if($i == 5)
-                    continue;
-
-                $url = 'https://twitter.com/'.$author.'/status/'.$tweet->id;
-                $tweetPreview = Twitter::getOembed(['url' => $url, 'hide_media' => true, 'maxwidth' => 550]);
-
+            foreach ($tweets as $tweet) {
+                $tweetPreview = Twitter::getOembed(['url' => $tweet['url'], 'hide_media' => true, 'maxwidth' => 550]);
                 $authorPosts[] = $tweetPreview->html;
-                $i++;
             }
 
             return $authorPosts;
@@ -106,21 +99,14 @@ class TwitterManager
      */
     public function getSimilarPosts($case){
         try{
-            $tweets = Twitter::getSearch(['q' => $case->title, 'count' => 20,  'max_id' => $case->tweet_id]);
+            $tweets = Twitter::getSearch(['q' => $case->keywords, 'count' => 20]);
+            $tweets = $this->filterContent($tweets->statuses);
 
             $similarPosts = [];
 
-            $i = 0;
-            foreach ($tweets->statuses as $key => $tweet) {
-
-                if($i == 5)
-                    continue;
-
-                $url = 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id;
-                $tweetPreview = Twitter::getOembed(['url' => $url, 'hide_media' => true, 'maxwidth' => 550]);
-
+            foreach ($tweets as $tweet) {
+                $tweetPreview = Twitter::getOembed(['url' =>$tweet['url'], 'hide_media' => true, 'maxwidth' => 550]);
                 $similarPosts[] = $tweetPreview->html;
-                $i++;
             }
 
             return $similarPosts;
@@ -138,20 +124,13 @@ class TwitterManager
     public function getSameAreaPosts($case){
         try{
             $place = Twitter::getGeoSearch(['query' => $case->location]);
-            $tweets = Twitter::getSearch(['q' => 'place:'.$place->result->places[0]->id, 'count' => 20, 'max_id' => $case->tweet_id]);
+            $tweets = Twitter::getSearch(['q' => 'place:'.$place->result->places[0]->id, 'count' => 20]);
+            $tweets = $this->filterContent($tweets->statuses);
 
             $similarPosts = [];
-            $i = 0;
-            foreach ($tweets->statuses as $key => $tweet) {
-
-                if($i == 5)
-                    continue;
-
-                $url = 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id;
-                $tweetPreview = Twitter::getOembed(['url' => $url, 'hide_media' => true, 'maxwidth' => 550]);
-
+            foreach ($tweets as $tweet) {
+                $tweetPreview = Twitter::getOembed(['url' => $tweet['url'], 'hide_media' => true, 'maxwidth' => 550]);
                 $similarPosts[] = $tweetPreview->html;
-                $i++;
             }
 
             return $similarPosts;
@@ -170,4 +149,32 @@ class TwitterManager
         return $coordinates;
     }
 
+    public function filterContent($data) {
+        $filterData = [];
+        $i = 0;
+        foreach ($data as $key => $tweet) {
+            if(!$this->in_array_r($tweet->id, $filterData) && strpos($tweet->text, 'RT') !== 0) {
+                if($i == 5)
+                    continue;
+
+                $filterData[$i]['tweet_id'] = $tweet->id;
+                $filterData[$i]['author'] = $tweet->user->screen_name;
+                $filterData[$i]['posted_date'] = $tweet->created_at;
+                $filterData[$i]['url'] = 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id;
+                $i++;
+            }
+        }
+
+        return $filterData;
+    }
+
+    public function in_array_r($needle, $haystack, $strict = false) {
+        foreach ($haystack as $item) {
+            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

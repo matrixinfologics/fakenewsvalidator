@@ -237,7 +237,7 @@ class CasesController extends Controller
     {
         try{
             $sectionId = NewsCase::SECTION_INFO;
-            $cacheKey = "info_{$id}";
+            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
@@ -297,7 +297,7 @@ class CasesController extends Controller
     {
         try{
             $sectionId = NewsCase::SECTION_POST_ANALYSIS;
-            $cacheKey = "analysis_{$id}";
+            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
@@ -325,8 +325,8 @@ class CasesController extends Controller
     public function authorPosts($id)
     {
         try{
-            $cacheKey = "author_posts_{$id}";
             $sectionId = NewsCase::SECTION_AUTHOR_LATEST_POSTS;
+            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
@@ -382,8 +382,8 @@ class CasesController extends Controller
     public function similarPosts($id)
     {
         try{
-            $cacheKey = "similar_posts_{$id}";
             $sectionId = NewsCase::SECTION_SIMILAR_POSTS;
+            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
@@ -411,8 +411,8 @@ class CasesController extends Controller
     public function sameAreaPosts($id)
     {
         try{
-            $cacheKey = "samearea_posts_{$id}";
             $sectionId = NewsCase::SECTION_SIMILAR_POSTS_SAME_AREA;
+            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
 
             $this->setTwitterConfig();
@@ -426,7 +426,7 @@ class CasesController extends Controller
             return view('Front.sections.sameareaposts', ['case' => $case, 'sectionId' => $sectionId, 'sameAreaPosts' => $sameAreaPosts]);
         } catch(\Exception $e){
             return redirect()->back()
-                            ->with('error', 'Invalid Tweet, Please try again.')
+                            ->with('error', $e->getMessage())
                             ->withInput();
         }
     }
@@ -439,8 +439,8 @@ class CasesController extends Controller
      */
     public function authorProfile($id)
     {
-        $cacheKey = "stats_{$id}";
         $sectionId = NewsCase::SECTION_AUTHOR_PROFILE;
+        $cacheKey = "{$sectionId}{$id}";
         $case = $this->case->findorFail($id);
         $screen_name = $case->tweet_author;
 
@@ -466,8 +466,8 @@ class CasesController extends Controller
     public function imageSearch(Request $request, $id)
     {
         try{
-            $cacheKey = "image_search_{$id}";
             $sectionId = NewsCase::SECTION_IMAGE_SEARCH;
+            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
 
             if ($case->tweet_image == null)
@@ -521,6 +521,38 @@ class CasesController extends Controller
         $sections = $this->case->getSections();
 
         return view('Front.sections.results', ['case' => $case, 'sections' => $sections]);
+    }
+
+    /**
+    * Related Cases
+    *
+    * @param int $id
+    * @return Response
+    */
+    public function relatedCases($id)
+    {
+        $case = $this->case->findorFail($id);
+        $relatedCases = $this->case
+                            ->where(function ($query) use ($case) {
+                                $query->where('title', 'like', '%'.$case->title.'%')
+                                      ->orWhere('keywords', 'like', '%'.$case->keywords.'%');
+                            })
+                            ->where('id', '!=', $id)
+                            ->take(3)
+                            ->get();
+
+        return view('Front.sections.related-cases', ['case' => $case, 'relatedCases' => $relatedCases]);
+    }
+
+    /**
+    * Clear Cache
+    *
+    * @return Response
+    */
+    public function clearCache($id, $sectionId)
+    {
+        Cache::forget("{$sectionId}{$id}");
+        return redirect()->back();
     }
 
 

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('title', 'Similar Posts')
 @section('page-header', 'Similar Posts')
+@section('refresh-button')
+    <a href="{{ route('cache', [$case, $sectionId]) }}" class="btn btn-success">Refresh</a>
+@endsection
 @section('content')
     <div class="inner-info-content">
         @if(!empty($similarPosts))

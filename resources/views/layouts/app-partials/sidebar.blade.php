@@ -11,9 +11,6 @@
         <li class="{{ Route::currentRouteName() == 'analysis'?'active':'' }}">
             <a href="{{ route('analysis', $case) }}" >Post Analysis</a>
         </li>
-        <li>
-            <a href="#">Replies</a>
-        </li>
         <li class="{{ Route::currentRouteName() == 'author-profile'?'active':'' }}">
             <a href="{{ route('author-profile', $case) }}" >Author Profile</a>
         </li>
@@ -40,6 +37,9 @@
         </li>
         <li class="{{ Route::currentRouteName() == 'results'?'active':'' }}">
             <a href="{{ route('results', $case) }}" >Result</a>
+        </li>
+        <li class="{{ Route::currentRouteName() == 'related'?'active':'' }}">
+            <a href="{{ route('related', $case) }}" >Related Cases</a>
         </li>
     </ul>
 </nav>

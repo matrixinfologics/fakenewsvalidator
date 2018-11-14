@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth:front', 'front']], function () {
     Route::get('/image-search/{case}', 'CasesController@imageSearch')->name('image-search');
     Route::get('/source-cross-check/{case}', 'CasesController@sourceCrossCheck')->name('source-cross');
     Route::get('/results/{case}', 'CasesController@results')->name('results');
+    Route::get('/related/{case}', 'CasesController@relatedCases')->name('related');
+    Route::get('/cache/{case}/{sectionId}', 'CasesController@clearCache')->name('cache');
     Route::get('/discussions/{case}', 'DiscussionController@discussion')->name('discussions');
     Route::post('/discussions/{case}', 'DiscussionController@discussionSave')->name('discussions');
 

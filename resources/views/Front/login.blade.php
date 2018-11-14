@@ -34,7 +34,7 @@
                         <div class="form-group">
                             {{ Form::password('password', ['class' => 'form-control', 'placeholder' => 'Password']) }}
                         </div>
-                        <a href="{{ route('password.forgot') }}" class="">Forgot Password</a>
+                        <a href="{{ route('password.forgot') }}" class="forgot_option">Forgot Password</a>
                         {{ Form::submit('Login', ['class' => 'btn btn-primary']) }}
                     {{ Form::close() }}
                 </div>
