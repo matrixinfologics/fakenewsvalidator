@@ -1005,6 +1005,28 @@ a.forgot_option {
     color: #3d4958;
     font-weight: bold;
 }
+
+/*15-11-2018*/
+#post_duration_form label {
+    top: 4px !important;
+    font-size: 14px;
+    color: #3d4958;
+    display: inline-block;
+    float: left;
+}
+#post_duration_form .form-control {
+    border: 1px solid #3d4958 !important;
+    display: inline-block !important;
+    float: right;
+    width: 75%;
+    margin-left: 5px;
+    padding: 0 !important;
+    height: 26px!important;
+}
+#post_duration_form {
+    width: 30%;
+    float: right;
+}
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
@@ -1043,6 +1065,14 @@ span.mention {
     padding: 7px !important;
 }
 .cases form{width: 100%;}
+#post_duration_form .form-control {
+     display: block !important;
+    float: none;
+    width: 75%;
+}
+#post_duration_form {
+    padding: 0 0 0 10px;
+}
 }
 @media (max-width: 991px) {
     .inner-info-content img {
@@ -1221,6 +1251,10 @@ button.btn.btn-flag {
 .inner-info-content {
     padding: 35px 5px 35px 5px;
 }
+#post_duration_form .form-control {
+    width: 90%;
+    font-size: 13px;
+}
 }
 @media (max-width: 414px){
 #sidebar {
@@ -1256,6 +1290,9 @@ img.user-prof {
 }
 #sidebar {
     min-width: 220px;
+}
+#post_duration_form .form-control {
+    font-size: 9px;
 }
 }
 @media (max-width: 320px) {

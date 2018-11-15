@@ -43,6 +43,6 @@ class ResetPasswordController extends Controller
             return route('dashboard');
         }
 
-        return route('/');
+        return route('cases');
     }
 }

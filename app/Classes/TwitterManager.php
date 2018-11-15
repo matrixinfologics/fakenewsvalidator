@@ -72,12 +72,14 @@ class TwitterManager
      * get latest posts of author
      *
      * @param string $author
+     * @param string $duration
      * @return array
      */
-    public function getAuthorPosts($author){
+    public function getAuthorPosts($author, $duration){
         try{
-            $tweets = Twitter::getUserTimeline(['screen_name' => $author, 'count' => 15, 'exclude_replies'=> true, 'include_rts' => false]);
-            $tweets = $this->filterContent($tweets);
+            $tweets = Twitter::getUserTimeline(['screen_name' => $author, 'count' => 100, 'exclude_replies'=> true, 'include_rts' => false]);
+            $tweets = $this->filterContentByDuration($tweets, $duration);
+
 
             $authorPosts = [];
             foreach ($tweets as $tweet) {
@@ -164,6 +166,33 @@ class TwitterManager
                 $i++;
             }
         }
+
+        return $filterData;
+    }
+
+    public function filterContentByDuration($data, $duration) {
+        $filterData = [];
+        $i = 0;
+        foreach ($data as $key => $tweet) {
+                $filterData[$i]['tweet_id'] = $tweet->id;
+                $filterData[$i]['author'] = $tweet->user->screen_name;
+                $filterData[$i]['posted_date'] = $tweet->created_at;
+                $filterData[$i]['url'] = 'https://twitter.com/'.$tweet->user->screen_name.'/status/'.$tweet->id;
+                $i++;
+        }
+        if($duration == '24')
+            $rangeStart = strtotime('-24 Hours');
+        else if($duration == 'week')
+            $rangeStart = strtotime('-1 week');
+        else
+            $rangeStart = strtotime('-1 month');
+
+        $rangeEnd = strtotime('now');
+
+        $filterData = array_filter($filterData, function($var) use ($rangeStart, $rangeEnd) {
+            $utime = strtotime($var['posted_date']);
+            return $utime <= $rangeEnd && $utime >= $rangeStart;
+         });
 
         return $filterData;
     }

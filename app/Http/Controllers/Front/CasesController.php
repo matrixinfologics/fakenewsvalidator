@@ -36,9 +36,6 @@ class CasesController extends Controller
 
     private $pagination = 10;
 
-    /** Cache Expirty time */
-    private $cacheExpiryTime;
-
     /**
      * Create a new controller instance.
      *
@@ -56,7 +53,6 @@ class CasesController extends Controller
        $this->company = $company;
        $this->twitterManager = $twitterManager;
        $this->settings = $settings;
-       $this->cacheExpiryTime = now()->addMinutes(60);
     }
 
     /**
@@ -243,7 +239,7 @@ class CasesController extends Controller
             $this->setTwitterConfig();
 
             if(!Cache::has($cacheKey)) {
-                Cache::put($cacheKey, $this->twitterManager->getTweetPreview($case->url), $this->cacheExpiryTime);
+                Cache::forever($cacheKey, $this->twitterManager->getTweetPreview($case->url));
             }
 
             $tweetPreview = Cache::get($cacheKey);
@@ -302,7 +298,7 @@ class CasesController extends Controller
 
             $this->setTwitterConfig();
             if(!Cache::has($cacheKey)) {
-                Cache::put($cacheKey, $this->twitterManager->getTweetPreview($case->url), $this->cacheExpiryTime);
+                Cache::forever($cacheKey, $this->twitterManager->getTweetPreview($case->url));
             }
 
             $tweetPreview = Cache::get($cacheKey);
@@ -319,25 +315,27 @@ class CasesController extends Controller
     /**
      * Author Latest Posts
      *
+     * @param Request $request
      * @param int $id
      * @return Response
      */
-    public function authorPosts($id)
+    public function authorPosts(Request $request, $id)
     {
         try{
             $sectionId = NewsCase::SECTION_AUTHOR_LATEST_POSTS;
-            $cacheKey = "{$sectionId}{$id}";
             $case = $this->case->findorFail($id);
-
             $this->setTwitterConfig();
 
+            $duration = $request->has('duration')? $request->get('duration'): 'month';
+
+            $cacheKey = "{$sectionId}{$id}{$duration}";
             if(!Cache::has($cacheKey)) {
-                Cache::put($cacheKey, $this->twitterManager->getAuthorPosts($case->tweet_author), $this->cacheExpiryTime);
+                Cache::forever($cacheKey, $this->twitterManager->getAuthorPosts($case->tweet_author, $duration));
             }
 
             $authorPosts = Cache::get($cacheKey);
 
-            return view('Front.sections.authorposts', ['case' => $case, 'sectionId' => $sectionId, 'authorPosts' => $authorPosts]);
+            return view('Front.sections.authorposts', ['case' => $case, 'sectionId' => $sectionId, 'duration' => $duration, 'authorPosts' => $authorPosts]);
         } catch(\Exception $e){
             return redirect()->back()
                             ->with('error', 'Invalid Tweet, Please try again.')
@@ -389,7 +387,7 @@ class CasesController extends Controller
             $this->setTwitterConfig();
 
             if(!Cache::has($cacheKey)) {
-                Cache::put($cacheKey, $this->twitterManager->getSimilarPosts($case), $this->cacheExpiryTime);
+                Cache::forever($cacheKey, $this->twitterManager->getSimilarPosts($case));
             }
 
             $similarPosts = Cache::get($cacheKey);
@@ -418,7 +416,7 @@ class CasesController extends Controller
             $this->setTwitterConfig();
 
             if(!Cache::has($cacheKey)) {
-                Cache::put($cacheKey, $this->twitterManager->getSameAreaPosts($case), $this->cacheExpiryTime);
+                Cache::forever($cacheKey, $this->twitterManager->getSameAreaPosts($case));
             }
 
             $sameAreaPosts = Cache::get($cacheKey);
@@ -448,7 +446,7 @@ class CasesController extends Controller
         $twitter_user = new TwitterUser($config['consumer_key'], $config['consumer_secret'], $config['token'], $config['secret'], $screen_name);
 
         if(!Cache::has($cacheKey)) {
-            Cache::put($cacheKey, $twitter_user->getUserStatistics(), $this->cacheExpiryTime);
+            Cache::forever($cacheKey, $twitter_user->getUserStatistics());
         }
 
         $stats = Cache::get($cacheKey);
@@ -459,11 +457,10 @@ class CasesController extends Controller
     /**
      * Image Search
      *
-     * @param Request $request
      * @param int $id
      * @return Response
      */
-    public function imageSearch(Request $request, $id)
+    public function imageSearch($id)
     {
         try{
             $sectionId = NewsCase::SECTION_IMAGE_SEARCH;
@@ -479,7 +476,7 @@ class CasesController extends Controller
                         $this->settings->getSettingValueByKey(Setting::TYPE_TINEYE_PUBLIC_KEY)
                     );
                 $data = $tineyeApi->searchImageUrl($case->tweet_image);
-                Cache::put($cacheKey, $data, $this->cacheExpiryTime);
+                Cache::forever($cacheKey, $data);
             }
 
             $data = Cache::get($cacheKey);
@@ -549,9 +546,9 @@ class CasesController extends Controller
     *
     * @return Response
     */
-    public function clearCache($id, $sectionId)
+    public function clearCache($key)
     {
-        Cache::forget("{$sectionId}{$id}");
+        Cache::forget($key);
         return redirect()->back();
     }
 
