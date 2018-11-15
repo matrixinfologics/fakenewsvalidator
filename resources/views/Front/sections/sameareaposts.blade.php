@@ -2,7 +2,7 @@
 @section('title', 'Same Area Posts')
 @section('page-header', 'Same Area Posts')
 @section('refresh-button')
-    <a href="{{ route('cache', [$case, $sectionId]) }}" class="btn btn-success">Refresh</a>
+    <a href="{{ route('cache', $sectionId.$case->id) }}" class="btn btn-success">Refresh</a>
 @endsection
 @section('content')
     <div class="inner-info-content">
