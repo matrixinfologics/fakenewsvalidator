@@ -119,7 +119,7 @@ for($i = 0; $i < 24; $i++){
                         <div class="col-md-4">
                             <ul class="main-list-ul most-reply">
                                 @foreach($stats->most_retweeted_users as $user => $count)
-                                    <li><img src="{{ $stats->users_in_timeline[$user]->profile_image_url }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                    <li><div class="over_content_custom"><img src="{{ $stats->users_in_timeline[$user]->profile_image_url }}"><span> @ {{ $user }}</span> </div> <div class="over_content_mention"><span class="mention">{{ $count }}</span></div></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -138,7 +138,7 @@ for($i = 0; $i < 24; $i++){
                         <div class="col-md-4">
                             <ul class="main-list-ul most-reply">
                                 @foreach($stats->most_replied_to_users as $user => $count)
-                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                    <li><div class="over_content_custom"><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span></div> <div class="over_content_mention"><span class="mention">{{ $count }}</span></div></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -157,7 +157,7 @@ for($i = 0; $i < 24; $i++){
                         <div class="col-md-4">
                             <ul class="main-list-ul most-reply">
                                 @foreach($stats->user_mentions as $user => $count)
-                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                    <li><div class="over_content_custom"><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> </div> <div class="over_content_mention"><span class="mention">{{ $count }}</span></div></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -176,7 +176,7 @@ for($i = 0; $i < 24; $i++){
                         <div class="col-md-4">
                             <ul class="main-list-ul most-reply most-hashtag">
                                 @foreach($stats->hashtags as $user => $count)
-                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><div class="over_content_custom"><span> @ {{ $user }}</span> </div> <div class="over_content_mention"><span class="mention">{{ $count }}</span></div></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -195,7 +195,7 @@ for($i = 0; $i < 24; $i++){
                         <ul class="main-list-ul most-reply most-hashtag">
                             @if(!empty($stats->most_retweeted))
                                 @foreach($stats->most_retweeted as $user => $count)
-                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                    <li><div class="over_content_custom"><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span></div> <div class="over_content_mention"> <span class="mention">{{ $count }}</span></div></li>
                                 @endforeach
                             @else
                                  <li>No record found</li>
@@ -207,7 +207,7 @@ for($i = 0; $i < 24; $i++){
                         <ul class="main-list-ul most-reply most-hashtag">
                             @if(!empty($stats->most_retweeted))
                                 @foreach($stats->most_favorited as $user => $count)
-                                    <li><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> <span class="mention">{{ $count }}</span></li>
+                                    <li><div class="over_content_custom"><img src="{{ !empty( $stats->users_in_timeline[$user])? $stats->users_in_timeline[$user]->profile_image_url : 'http://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png' }}"><span> @ {{ $user }}</span> </div> <div class="over_content_mention"> <span class="mention">{{ $count }}</span></div></li>
                                 @endforeach
                             @else
                                  <li>No record found</li>

@@ -190,27 +190,29 @@ class CasesController extends Controller
         $this->case->keywords = $request->get('keywords');
         $this->case->tweet_id = $tweet->id;
         $this->case->tweet_image = $tweetImage;
-        $this->case->location = $location;
         $this->case->tweet_author = $tweet->user->screen_name;
 
         $latitude = null;
         $longitude = null;
 
-        if( !empty($tweet->place)) {
+        if($tweet->place != '') {
             $geo = $this->twitterManager->getGeo($tweet->place->id);
             $latitude = $geo['latitude'];
             $longitude = $geo['longitude'];
         } else if($location != ''){
             try{
                 $geo = Mapper::location($location);
+                $location = $geo->getAddress();
                 $latitude = $geo->getLatitude();
                 $longitude = $geo->getLongitude();
             } catch(\Exception $e){
                 $latitude = null;
                 $longitude = null;
+                throw new \Exception($e->getMessage());
             }
         }
 
+        $this->case->location = $location;
         $this->case->latitude = $latitude;
         $this->case->longitude = $longitude;
 
@@ -532,6 +534,8 @@ class CasesController extends Controller
         $relatedCases = $this->case
                             ->where(function ($query) use ($case) {
                                 $query->where('title', 'like', '%'.$case->title.'%')
+                                      ->orWhere('keywords', 'like', '%'.$case->title.'%')
+                                      ->orWhere('title', 'like', '%'.$case->keywords.'%')
                                       ->orWhere('keywords', 'like', '%'.$case->keywords.'%');
                             })
                             ->where('id', '!=', $id)
