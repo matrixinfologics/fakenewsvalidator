@@ -8,6 +8,7 @@ use App\NewsCase;
 use Auth;
 use Thujohn\Twitter\Twitter as twitterConfig;
 use Twitter;
+use Mapper;
 use RunTimeException;
 
 class TwitterManager
@@ -126,6 +127,13 @@ class TwitterManager
     public function getSameAreaPosts($case){
         try{
             $place = Twitter::getGeoSearch(['query' => $case->location]);
+
+            if(empty($place->result->places)) {
+                $geo = Mapper::location($case->location);
+                $location = $geo->getAddress();
+                $place = Twitter::getGeoSearch(['query' => $location]);
+            }
+
             $tweets = Twitter::getSearch(['q' => 'place:'.$place->result->places[0]->id, 'count' => 20]);
             $tweets = $this->filterContent($tweets->statuses);
 
@@ -137,7 +145,7 @@ class TwitterManager
 
             return $similarPosts;
         } catch (RunTimeException $e) {
-            throw new \Exception("Please provide correct detail!");
+            throw new \Exception($e->getMessage());
         }
     }
 

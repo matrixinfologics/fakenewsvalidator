@@ -4,10 +4,10 @@
 'use strict';
 
 class EnableHighCharts {
-	test(){
-		console.log("test Class");
-	}
-	showTweetHistoryChart(data, pointStart) {
+    test(){
+        console.log("test Class");
+    }
+    showTweetHistoryChart(data, pointStart) {
          $('#tweet_history_chart').highcharts({
             credits: {
                   enabled: false
@@ -61,7 +61,7 @@ class EnableHighCharts {
                 name: 'Tweets',
                 type: 'area',
                 pointInterval: 24 * 3600 * 1000,
-                pointStart: pointStart,    
+                pointStart: pointStart,
                 data: data
             }]
         });
@@ -92,7 +92,10 @@ class EnableHighCharts {
             plotOptions: {
                 pie: {
                     innerSize: 100,
-                    depth: 45
+                    depth: 45,
+                    dataLabels: {
+                        useHTML: true
+                    }
                 }
             },
             series: [{

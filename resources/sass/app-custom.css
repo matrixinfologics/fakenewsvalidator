@@ -1027,6 +1027,17 @@ a.forgot_option {
     width: 30%;
     float: right;
 }
+
+/*16-11-2018*/
+.over_content_custom{
+    width: 75%;
+    display: inline-block;
+    word-wrap: break-word;
+}
+.over_content_mention {
+    width: 25%;
+    display: inline;
+}
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
