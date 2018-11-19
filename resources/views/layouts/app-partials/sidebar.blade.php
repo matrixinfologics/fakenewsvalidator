@@ -15,7 +15,7 @@
             <a href="{{ route('author-profile', $case) }}" >Author Profile</a>
         </li>
         <li class="{{ Route::currentRouteName() == 'author-posts'?'active':'' }}">
-            <a href="{{ route('author-posts', $case) }}" >Author Latest Post</a>
+            <a href="{{ route('author-posts', $case) }}" >Author Latest Posts</a>
         </li>
         <li class="{{ Route::currentRouteName() == 'post-location'?'active':'' }}">
             <a href="{{ route('post-location', $case) }}" >Post Geo Location</a>

@@ -48,7 +48,7 @@ class TwitterManager
      */
     public function verifyTweet($tweetId){
         try{
-            return Twitter::getTweet($tweetId, ['include_entities' => true]);
+            return Twitter::getTweet($tweetId, ['include_entities' => true, 'tweet_mode' => 'extended']);
         } catch (RunTimeException $e) {
             return false;
         }
