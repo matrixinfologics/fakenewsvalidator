@@ -4,5 +4,5 @@
 @section('page-header', 'Dashboard')
 
 @section('content')
-    <p>This is my body content.</p>
+    <p>It is Admin dashboard.</p>
 @endsection

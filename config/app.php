@@ -160,6 +160,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Aginev\Datagrid\DatagridServiceProvider::class,
+        Thujohn\Twitter\TwitterServiceProvider::class,
+        Cornford\Googlmapper\MapperServiceProvider::class,
 
     ],
 
@@ -211,7 +214,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-
+        'Datagrid' => Aginev\Datagrid\Datagrid::class,
+        'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
+        'Mapper'         => Cornford\Googlmapper\Facades\MapperFacade::class,
     ],
 
 ];

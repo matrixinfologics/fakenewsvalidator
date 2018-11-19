@@ -1,0 +1,16 @@
+// Node Modules
+@import '../../node_modules/select2/dist/css/select2.min';
+
+// Import all manually installed libraries
+@import "./libs/bootstrap.min";
+@import "./libs/font-awesome.min";
+@import "./libs/admin-lte.min";
+@import "./libs/skin-blue.min";
+
+
+// Variables
+@import 'variables';
+// Common css
+@import 'admin-custom';
+
+

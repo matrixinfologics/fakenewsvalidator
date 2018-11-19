@@ -16,9 +16,13 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('website');
+            $table->string('website')->nullable()->default(null);
             $table->string('phone', 50);
-            $table->string('address');
+            $table->string('address', 500);
+            $table->string('twitter_consumer_key', 500)->nullable();
+            $table->string('twitter_consumer_secret', 500)->nullable();
+            $table->string('twitter_access_token', 500)->nullable();
+            $table->string('twitter_access_token_secret', 500)->nullable();
             $table->timestamps();
         });
     }
