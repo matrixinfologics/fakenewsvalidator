@@ -208,7 +208,6 @@ class CasesController extends Controller
             } catch(\Exception $e){
                 $latitude = null;
                 $longitude = null;
-                throw new \Exception($e->getMessage());
             }
         }
 
