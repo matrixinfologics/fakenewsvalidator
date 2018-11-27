@@ -4,20 +4,19 @@ Twitter Fake news validator
 
 ### Recommended software
 - Ubuntu 16.04
-- PHP 7.0
+- PHP 7.2
 - MySQL
 - composer
 - nodejs and npm
 - gulp
 
 ### First Installation
-1. Clone repository (e.g `git clone -b dev https://matrix_development@bitbucket.org/matrix_development/fakenewsvalidator.git`)
-2. `cd fakenewsvalidator`
-3. `composer install`
-4. copy `.env.example` to `.env`
-5. Create a new MySQL database and add detail to .env file
+1. Clone repository
+2. copy `.env.example` to `.env`
+3. Create a new MySQL database and add detail to .env file
+4. Run `npm run fresh`
+5. Run `php artisan migrate` and `php artisan db:seed`
 6. Make sure that bootstrap/cache and storage directories are writable
-7. php artisan key:generate 
 8. *[optional]* Create Apache virtual host based on `/server_config/apache-virtualhost.conf`
 
 ### Virtual Host
