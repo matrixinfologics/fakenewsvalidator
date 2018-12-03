@@ -20,6 +20,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     // Users Management
     Route::get('users/delete/{user}', 'UserController@delete')->name('users.delete');
+    Route::get('users/status/{user}', 'UserController@changeStatus')->name('users.status');
     Route::resource('users', 'UserController');
     //Company management
     Route::get('companies/delete/{id}', 'CompanyController@delete')->name('companies.delete');
