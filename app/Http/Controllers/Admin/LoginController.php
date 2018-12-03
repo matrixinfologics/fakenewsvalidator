@@ -52,6 +52,14 @@ class LoginController extends Controller
                 ->withInput($request->except('password'));
         } else {
             if (Auth::attempt($credentials)) {
+
+                if (Auth::user()->user()->status == 0) {
+                    Auth::logout();
+                    return Redirect::to(route('admin.login'))
+                        ->withErrors('This user account is inactive.')
+                        ->withInput($request->except('password'));
+                }
+
                 Auth::login(Auth::user(), true);
                 return redirect(route('dashboard'));
             } else {

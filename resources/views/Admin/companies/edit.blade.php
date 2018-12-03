@@ -35,9 +35,9 @@
                             <span class="help-block">{{ $errors->first('address') }}</span>
                         </div>
                         @if(!Auth::user()->isCompanyAdmin())
-                             <div class="form-group {{ $errors->first('user')?'has-error':'' }}">
+                             <div class="form-group {{ $errors->first('admin')?'has-error':'' }}">
                                 {{ Form::select('admin', $users, isset($company->companyAdmin->id) ? $company->companyAdmin->id : null, ['class' => 'form-control select2', 'placeholder' => 'Choose company admin']) }}
-                                <span class="help-block">{{ $errors->first('user') }}</span>
+                                <span class="help-block">{{ $errors->first('admin') }}</span>
                             </div>
                              <div class="form-group has-warning">
                                    <span class="help-block"><i class="glyphicon glyphicon-question-sign"></i> If company admin is not available please <a href="{{ route('users.create')}}" title="Create User"> create new user</a></span>

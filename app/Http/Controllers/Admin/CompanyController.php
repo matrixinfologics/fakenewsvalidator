@@ -134,7 +134,12 @@ class CompanyController extends Controller
     public function edit($id)
     {
         $company =  $this->company->findorFail($id);
-        $users = $users = User::where('role', User::ROLE_COMPANY_ADMIN)->whereNull('company_id')->orWhere('company_id', $id)->get()->pluck('name', 'id');
+        $users = User::where('role', User::ROLE_COMPANY_ADMIN)
+                        ->where(function ($query) use ($id) {
+                                $query->whereNull('company_id')
+                                      ->orWhere('company_id', $id);
+                            })
+                        ->get()->pluck('name', 'id');
         return view('Admin.companies.edit', ['company' => $company, 'users' => $users]);
     }
 
@@ -163,9 +168,11 @@ class CompanyController extends Controller
         // Assign admin to company
         if($request->filled('admin')) {
             // Remove old company admin
-            $oldUser = $this->user->find($company->companyAdmin->id);
-            $oldUser->company()->dissociate($company);
-            $oldUser->save();
+            if (is_object($company->companyAdmin)) {
+                $oldUser = $this->user->find($company->companyAdmin->id);
+                $oldUser->company()->dissociate($company);
+                $oldUser->save();
+            }
 
             $user = $this->user->find($request->get('admin'));
             $company->users()->save($user);
@@ -225,8 +232,16 @@ class CompanyController extends Controller
             ->setColumn('updated_at', 'Updated At')
             ->setActionColumn([
                 'wrapper' => function ($value, $row) {
-                    return '<a href="'.route("users.edit", $row->id).'" title="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                            <a href="'.route("users.delete", $row->id).'" title="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+                    if($row->status == 1) {
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Disable User" class="btn btn-xs"><span class="glyphicon glyphicon-check text-danger" aria-hidden="true"></span></a>';
+                    } else {
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Enable User" class="btn btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></a>';
+                    }
+
+                    $actions .= '<a href="'.route("users.edit", $row->id).'" data-tooltip="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                            <a href="'.route("users.delete", $row->id).'" data-tooltip="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+
+                    return $actions;
                 }
             ]);
 
