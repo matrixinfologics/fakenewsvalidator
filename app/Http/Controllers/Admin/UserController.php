@@ -67,8 +67,16 @@ class UserController extends Controller
             ->setColumn('updated_at', 'Updated At')
             ->setActionColumn([
                 'wrapper' => function ($value, $row) {
-                    return '<a href="'.route("users.edit", $row->id).'" title="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                            <a href="'.route("users.delete", $row->id).'" title="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+                    if($row->status == 1) {
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Disable" class="btn btn-xs"><span class="glyphicon glyphicon-check text-danger" aria-hidden="true"></span></a>';
+                    } else {
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Enable" class="btn btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></a>';
+                    }
+
+                    $actions .= '<a href="'.route("users.edit", $row->id).'" data-tooltip="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                            <a href="'.route("users.delete", $row->id).'" data-tooltip="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+
+                    return $actions;
                 }
             ]);
 
@@ -176,6 +184,23 @@ class UserController extends Controller
 
         return redirect(route('users.index'))
             ->with('success','User updated successfully!');
+    }
+
+    /**
+    * Update User status
+    *
+    * @param int $id
+    * @return Response
+    */
+    public function changeStatus($id)
+    {
+        $user = $this->user->findorFail($id);
+        $status = $user->status === '1' ? '0' : '1';
+        $user->status = $status;
+        $user->save();
+
+        return redirect(route('users.index'))
+            ->with('success','User Status has been changed!');
     }
 
     /**
