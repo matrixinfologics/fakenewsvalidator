@@ -53,7 +53,7 @@ class LoginController extends Controller
         } else {
             if (Auth::attempt($credentials)) {
 
-                if (Auth::user()->user()->status == 0) {
+                if (Auth::user()->status == 0) {
                     Auth::logout();
                     return Redirect::to(route('admin.login'))
                         ->withErrors('This user account is inactive.')
