@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "fresh": "composer install && npm install && php artisan key:generate",
+        "fresh": "composer install && npm install && php artisan key:generate && php artisan migrate && php artisan db:seed",
         "dev": "composer install && npm install && npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "npm run development -- --watch",
