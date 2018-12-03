@@ -199,12 +199,7 @@ class UserController extends Controller
         $user->status = $status;
         $user->save();
 
-<<<<<<< HEAD
-        return redirect(route('users.index'))
-            ->with('success','User Status has been changed!');
-=======
         return redirect()->back()->with('success','User Status has been changed!');
->>>>>>> a483ddd77168dc93844b00ed6ef3b07c8afc46de
     }
 
     /**
