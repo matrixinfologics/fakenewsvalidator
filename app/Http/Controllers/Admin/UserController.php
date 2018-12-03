@@ -68,9 +68,9 @@ class UserController extends Controller
             ->setActionColumn([
                 'wrapper' => function ($value, $row) {
                     if($row->status == 1) {
-                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Disable" class="btn btn-xs"><span class="glyphicon glyphicon-check text-danger" aria-hidden="true"></span></a>';
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Disable User" class="btn btn-xs"><span class="glyphicon glyphicon-check text-danger" aria-hidden="true"></span></a>';
                     } else {
-                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Enable" class="btn btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></a>';
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Enable User" class="btn btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></a>';
                     }
 
                     $actions .= '<a href="'.route("users.edit", $row->id).'" data-tooltip="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
@@ -199,8 +199,12 @@ class UserController extends Controller
         $user->status = $status;
         $user->save();
 
+<<<<<<< HEAD
         return redirect(route('users.index'))
             ->with('success','User Status has been changed!');
+=======
+        return redirect()->back()->with('success','User Status has been changed!');
+>>>>>>> a483ddd77168dc93844b00ed6ef3b07c8afc46de
     }
 
     /**

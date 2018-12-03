@@ -52,6 +52,7 @@ class LoginController extends Controller
                 ->withInput($request->except('password'));
         } else {
             if ($this->guard()->attempt($credentials)) {
+
                 if ($this->guard()->user()->status == 0) {
                     $this->guard()->logout();
                     return Redirect::to(route('login'))

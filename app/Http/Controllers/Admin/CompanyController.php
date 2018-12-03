@@ -232,8 +232,16 @@ class CompanyController extends Controller
             ->setColumn('updated_at', 'Updated At')
             ->setActionColumn([
                 'wrapper' => function ($value, $row) {
-                    return '<a href="'.route("users.edit", $row->id).'" title="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                            <a href="'.route("users.delete", $row->id).'" title="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+                    if($row->status == 1) {
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Disable User" class="btn btn-xs"><span class="glyphicon glyphicon-check text-danger" aria-hidden="true"></span></a>';
+                    } else {
+                        $actions = '<a href="'.route("users.status", $row->id).'" data-tooltip="Enable User" class="btn btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></a>';
+                    }
+
+                    $actions .= '<a href="'.route("users.edit", $row->id).'" data-tooltip="Edit" class="btn btn-xs"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                            <a href="'.route("users.delete", $row->id).'" data-tooltip="Delete" data-method="DELETE" class="btn btn-xs text-danger delete_confirm" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+
+                    return $actions;
                 }
             ]);
 
