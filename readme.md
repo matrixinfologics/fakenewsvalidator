@@ -8,16 +8,15 @@ Twitter Fake news validator
 - MySQL
 - composer
 - nodejs and npm
-- gulp
 
 ### First Installation
 1. Clone repository
 2. copy `.env.example` to `.env`
 3. Create a new MySQL database and add detail to .env file
-4. Run `npm run fresh`
-5. Run `php artisan migrate` and `php artisan db:seed`
-6. Make sure that bootstrap/cache and storage directories are writable
-8. *[optional]* Create Apache virtual host based on `/server_config/apache-virtualhost.conf`
+4. Make sure that bootstrap/cache and storage directories are writable
+5. Run `npm run fresh` 
+6. Run `npm run dev` or Run `npm run prod`
+7. *[optional]* Create Apache virtual host based on `/server_config/apache-virtualhost.conf`
 
 ### Virtual Host
 - For example domain `fakenewsvalidator.dev` follow below steps:
